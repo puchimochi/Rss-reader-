@@ -175,7 +175,7 @@ abstract class Application
         try {
             $params = $this->router->resolve($this->request->getPathInfo());
             if ($params === false) {
-                throw new HttpNotFoundException('No route found for ' . $this->request->getPathInfo());
+                throw new HttpNotFoundException('No route found for ' . $this->request->getPathInfo().'★'.$this->request->getRequestUri().'★'.$this->request->getBaseUrl());
                 //throw new HttpNotFoundException('No route found for ' . $this->request->getRequestUri());
             }
 

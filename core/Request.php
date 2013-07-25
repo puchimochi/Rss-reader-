@@ -87,8 +87,8 @@ class Request
      */
     public function getRequestUri()
     {
-        //return $_SERVER['REQUEST_URI'];
-        return substr($_SERVER['REQUEST_URI'], 20);
+        return $_SERVER['REQUEST_URI'];
+        //return substr($_SERVER['REQUEST_URI'], 20);
         //return $_SERVER['SCRIPT_NAME'].'★'.$_SERVER['REQUEST_URI'];
     }
 
@@ -101,6 +101,7 @@ class Request
     {
         $request_uri = $this->getRequestUri();
         $script_name = $_SERVER['SCRIPT_NAME'];
+        //debug
 
         if (0 === strpos($request_uri, $script_name)) {
             return $script_name;
