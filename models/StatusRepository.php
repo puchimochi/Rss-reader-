@@ -11,7 +11,7 @@ class StatusRepository extends DbRepository{
 
 		$stmt = $this->execute($sql,array(
 			':user_id' => $user_id,
-			'comment' => $comment,
+			':comment' => $comment,
 			':created_at' => $now->format('Y-m-d H:i:s'),
 			));
 	}

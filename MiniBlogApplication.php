@@ -12,9 +12,9 @@ class MiniBlogApplication extends Application{
 	protected function registerRoutes()
 	{
 		return array(
-			/*'/account'
+			'/account'
 				=>array('controller'=>'account','action'=>'index'),
-				*/
+
 			'/account/:action'
 				=>array('controller'=>'account'),
 			'/'
