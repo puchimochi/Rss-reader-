@@ -1,6 +1,6 @@
 <?php $this->setLayoutVar('title','アカウント');?>
 
-<h2>アカウント</h2>
+<h2><?php echo $this->escape($user['user_name']); ?>のアカウント</h2>
 
 <p>
 	ユーザーID：

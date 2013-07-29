@@ -2,6 +2,8 @@
 
 class AccountController extends Controller{
 
+	protected $auth_actions = array('index','signout');
+
 	public function signupAction(){
 		return $this->render(
 			array('_token'=>$this->generateCsrfToken('account/signup'),
@@ -55,12 +57,14 @@ class AccountController extends Controller{
 			'_token' => $this->generateCsrfToken('account/signup'),
 			),'signup');
 	}
+
 	//アカウント情報管理
 	public function indexAction(){
 		$user = $this->session->get('user');
 		return $this->render(array('user' => $user));
 	}
 
+	//ログインメソッド
 	public function signinAction(){
 
 		if($this->session->isAuthenticated()){
@@ -74,6 +78,7 @@ class AccountController extends Controller{
 			));
 	}
 
+	//ログアウトメソッド
 	public function signoutAction(){
 		$this->session->clear();
 		$this->session->setAuthenticated(false);
@@ -81,6 +86,7 @@ class AccountController extends Controller{
 		return $this->redirect('/account/signin');
 	}
 
+	//ログイン認証メソッド
 	public function authenticateAction()
 	{
 		if($this->session->isAuthenticated()){

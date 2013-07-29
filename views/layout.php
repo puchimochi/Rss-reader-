@@ -11,6 +11,19 @@
 		<h1><a href="<?php echo $base_url;?>/">Mochi Blog</a></h1>
 	</div>
 
+	<div id ="navibar">
+		<p>
+			<?php if($session->isAuthenticated()):?>
+			<a href="<?php echo $base_url;?>/">ホーム</a>
+			<a href="<?php echo $base_url;?>/account">アカウント</a>
+			<a href="<?php echo $base_url;?>/account/signout">ログアウト</a>
+		<?php else:?>
+			<a href="<?php echo $base_url;?>/accoutn/signin">ログイン</a>
+			<a href="<?php echo $base_url;?>/account/signuo">アカウント登録</a>
+		<?php endif;?>
+		</p>
+	</div>
+
 	<div id="main">
 		<?php echo $_content;?>
 	</div>

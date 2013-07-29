@@ -2,6 +2,9 @@
 
 class Statuscontroller extends Controller{
 
+	protected $auth_actions = array('index','post');
+
+	//	コメントホーム
 	public function indexAction(){
 		$user = $this->session->get('user');
 		$statuses = $this->db_manager->get('Status')->fetchAllByUserId($user['id']);
@@ -13,6 +16,7 @@ class Statuscontroller extends Controller{
 			));
 	}
 
+	//コメント投稿メソッド
 	public function postAction(){
 		if(!$this->request->isPost()){
 			$this->forward404();
@@ -50,6 +54,7 @@ class Statuscontroller extends Controller{
 
 	}
 
+	//ユーザー投稿一覧
 	public function userAction($params){
 		$user = $this->db_manager->get('User')->fetchByUserName($params['user_name']);
 		if(! $user){
@@ -64,6 +69,7 @@ class Statuscontroller extends Controller{
 			));
 	}
 
+	//コメント詳細
 	public function showAction($params){
 		$status = $this->db_manager->get('Status')->fetchByIdAndUserName($params['id'],$params['user_name']);
 
