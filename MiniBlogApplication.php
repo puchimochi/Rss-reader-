@@ -25,6 +25,8 @@ class MiniBlogApplication extends Application{
 				=>array('controller' => 'status','action' => 'user'),
 			'/user/:user_name/status/:id'
 				=>array('controller' => 'status','action' => 'show'),
+			'/follow'
+				=>array('controller' => 'account' , 'action' => 'follow'),
 			);
 	}
 
