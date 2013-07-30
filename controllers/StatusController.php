@@ -17,7 +17,12 @@ class Statuscontroller extends Controller{
 
 		$statuses = $this->db_manager->get('Status')->fetchAllArchivesByUserIdForNew($user['id'],$page);
 		$comment_per_page=5;
-		$totalPages = ceil(count($status) / $comment_per_page);
+		$total = count($status);
+		$totalPages = ceil( $total / $comment_per_page);
+
+		$offset = $comment_per_page * ($page -1);
+		$from = $offset +1;
+		$to = ($offset + $comment_per_page) < $total ? ($offset + $comment_per_page) : $total;
 
 
 		return $this->render(array(
@@ -25,6 +30,10 @@ class Statuscontroller extends Controller{
 			'statuses' => $statuses,
 			'_token' => $this->generateCsrfToken('status/post'),
 			'totalPages' =>$totalPages,
+			'page' => $page,
+			'total' => $total,
+			'from' => $from,
+			'to' => $to,
 			));
 	}
 
