@@ -7,12 +7,24 @@ class Statuscontroller extends Controller{
 	//	コメントホーム
 	public function indexAction(){
 		$user = $this->session->get('user');
-		$statuses = $this->db_manager->get('Status')->fetchAllArchivesByUserId($user['id']);
+		$status = $this->db_manager->get('Status')->fetchAllArchivesByUserId($user['id']);
+
+		if(!isset($_GET['page'])){
+			$page = '1';
+		} else {
+			$page = $_GET['page'];
+		}
+
+		$statuses = $this->db_manager->get('Status')->fetchAllArchivesByUserIdForNew($user['id'],$page);
+		$comment_per_page=5;
+		$totalPages = ceil(count($status) / $comment_per_page);
+
 
 		return $this->render(array(
 			'comment' =>'',
 			'statuses' => $statuses,
 			'_token' => $this->generateCsrfToken('status/post'),
+			'totalPages' =>$totalPages,
 			));
 	}
 

@@ -24,3 +24,9 @@
 	<hr>
 <?php endforeach; ?>
 </div>
+
+<div id = "pages">
+	<?php for ($i = 1;$i <= $totalPages;$i++):?>
+	<a href="?page=<?php echo $i;?>"><?php echo $i;?></a>
+<?php endfor;?>
+</div>
