@@ -6,7 +6,10 @@ class AccountController extends Controller{
 
 	public function signupAction(){
 		return $this->render(
-			array('_token'=>$this->generateCsrfToken('account/signup'),
+			array(
+				'user_name' => '',
+				'password' => '',
+				'_token'=>$this->generateCsrfToken('account/signup'),
 				));
 	}
 
@@ -61,7 +64,11 @@ class AccountController extends Controller{
 	//アカウント情報管理
 	public function indexAction(){
 		$user = $this->session->get('user');
-		return $this->render(array('user' => $user));
+		$followings = $this->db_manager->get('User')->fetchAllFollowingsByUserId($user['id']);
+		return $this->render(array(
+			'user' => $user,
+			'followings' => $followings
+			));
 	}
 
 	//ログインメソッド

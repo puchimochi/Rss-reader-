@@ -1,9 +1,9 @@
 <?php $this->setLayoutVar('title',$user['user_name']);?>
 
-<h2><?php echo $this->escape($user['user_name']);?>のひとこと</h2>
+<h2><?php echo $this->escape($guestUser['user_name']);?>のひとこと</h2>
 
-<?php if(! is_null($following)): ?>
-<?php if($following): ?>
+<?php if(! is_null($followings)): ?>
+<?php if($followings): ?>
 	<p>フォロー中</p>
 <?php else: ?>
 	<form action ="<?php echo $base_url;?>/follow" method ="post">

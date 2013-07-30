@@ -7,7 +7,7 @@ class Statuscontroller extends Controller{
 	//	コメントホーム
 	public function indexAction(){
 		$user = $this->session->get('user');
-		$statuses = $this->db_manager->get('Status')->fetchAllByUserId($user['id']);
+		$statuses = $this->db_manager->get('Status')->fetchAllArchivesByUserId($user['id']);
 
 		return $this->render(array(
 			'comment' =>'',
@@ -54,28 +54,24 @@ class Statuscontroller extends Controller{
 
 	}
 
-	//ユーザー投稿一覧
+	//ユーザー一覧
 	public function userAction($params){
-		$user = $this->db_manager->get('User')->fetchByUserName($params['user_name']);
-		if(! $user){
+		$guestUser = $this->db_manager->get('User')->fetchByUserName($params['user_name']);
+		if(! $guestUser){
 			$this->forward404();
 		}
 
-		$statuses = $this->db_manager->get('Status')->fetchAllByUserId($user['id']);
+		$statuses = $this->db_manager->get('Status')->fetchAllByUserId($guestUser['id']);
 
-		//followしてるかどうか
-		$following = null;
-		if ($this->session->isAuthenticated()) {
-			$my = $this->session->get('user');
-			if ($my['id'] !== $user['id']) {
-				$following = $this->db_manager->get('Following')->isFollowing($my['id'],$user['id']);
-			}
-		}
+		$user = $this->session->get('user');
+		$followings = $this->db_manager->get('User')->fetchAllFollowingsByUserId($user['id']);
+
 
 		return $this->render(array(
 			'user' => $user,
+			'guestUser' => $guestUser,
 			'statuses' => $statuses,
-			'following' => $following,
+			'followings' => $followings,
 			'_token' => $this->generateCsrfToken('account/follow'),
 			));
 	}
