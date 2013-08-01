@@ -1,7 +1,7 @@
 <?php $this->setLayoutVar('title',$user['user_name']);?>
 
 <h2><?php echo $this->escape($guestUser['user_name']);?>のひとこと</h2>
-
+<?php if($guestUser !== $user):?>
 <?php if(! is_null($followings)): ?>
 <?php if($followings): ?>
 	<p>フォロー中</p>
@@ -14,6 +14,7 @@
 
 <?php endif; ?>
 <?php endif; ?>
+<?php endif;?>
 
 <div id="statuses">
 	<?php foreach ($statuses as $status):?>

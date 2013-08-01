@@ -1,10 +1,6 @@
 <?php
 
-/**
- * DbManager.
- *
- * @author Katsuhiro Ogawa <fivestar@nequal.jp>
- */
+
 class DbManager
 {
     protected $connections = array();
@@ -103,6 +99,16 @@ class DbManager
         return $this->repositories[$repository_name];
     }
 
+
+    /**
+    *__get()メソッド
+    *内部のget()を呼び出す
+   */
+
+    public function __get($repository_name)
+    {
+        return $this->get($repository_name);
+    }
     /**
      * デストラクタ
      * リポジトリと接続を破棄する

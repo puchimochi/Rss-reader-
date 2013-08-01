@@ -64,7 +64,7 @@ class AccountController extends Controller{
 	//アカウント情報管理
 	public function indexAction(){
 		$user = $this->session->get('user');
-		$followings = $this->db_manager->get('User')->fetchAllFollowingsByUserId($user['id']);
+		$followings = $this->db_manager->User->fetchAllFollowingsByUserId($user['id']);
 		return $this->render(array(
 			'user' => $user,
 			'followings' => $followings
