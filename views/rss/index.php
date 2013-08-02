@@ -3,20 +3,16 @@
 
 <h2>Rss test</h2>
 <div id = "rss">
+	<hr>
 
-	 <?php //var_dump($data);?>
-	<?php echo $this->escape($count);?>
+	<?php foreach($entries as $entry ):?>
+	<?php echo $this->escape($entry['date']);?>
+	<hr>
+	<?php echo $this->escape($entry['title']);?>
+	<hr>
+	<?php echo $entry['content'];?>
+	<hr>
 
-
-<!-- <?php echo $this->escape('site_title:'.$title);?> -->
-<!-- <?php echo $this->escape('site_title:'.$link);?> -->
-<!-- <br> -->
-	<!-- <?php echo $this->escape($articleTitle);?> -->
-
-
-
-
-
-<hr>
+<?php endforeach;?>
 
 </div>
