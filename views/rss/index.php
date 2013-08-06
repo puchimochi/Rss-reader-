@@ -2,7 +2,9 @@
 
 
 <h2>Rss test</h2>
+<?php echo $count;?>
 <div id = "rss">
+
 	<hr>
 
 	<?php foreach($entries as $entry ):?>
