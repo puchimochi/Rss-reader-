@@ -103,6 +103,7 @@ class DbManager
     /**
     *__get()メソッド
     *内部のget()を呼び出す
+    *Repositoryを呼び出すときはdb_manager->Statusのように直接repository名で
    */
 
     public function __get($repository_name)

@@ -24,10 +24,47 @@ class RssRepository extends DbRepository{
 			INSERT INTO sitelist(user_id,site_id) VALUES (:user_id,:site_id)
 			";
 
-			$stmt = $this->execute($sql,array(
+		$stmt = $this->execute($sql,array(
 				':user_id' => $user_id,
 				':site_id' => $site_id,
 				));
+		return $site_id;
 	}
+
+	public function insertRssData($site_id,$title,$link,$content,$date)
+	{
+		$sql ="
+		INSERT INTO entry(site_id, title, link, content, created_at) VALUES (:site_id,:title,:link,:content,:created_at)
+		";
+
+		$stmt = $this->execute($sql,array(
+			':site_id' => $site_id,
+			':title' => $title,
+			':link' => $link,
+			':content' => $content,
+			':created_at' => $date
+			));
+	}
+
+	// ユーザーのsite_listを取得
+	public function fetchAllUrlId($user_id)
+	{
+		$sql ="
+			SELECT site_id FROM sitelist WHERE user_id = :user_id
+		";
+
+		return $this->fetchAll($sql,array(':user_id' => $user_id));
+	}
+
+	//entryDBからデータを取り出す
+	public function fetchAllEntry($site_id)
+	{
+		$sql = "
+			SELECT * FROM entry WHERE site_id = :site_id
+		";
+
+		return $this->fetchAll($sql,array(':site_id' => $site_id));
+	}
+
 
 }
