@@ -56,4 +56,23 @@ class StatusRepository extends DbRepository{
 			':user_name' => $user_name,
 			));
 	}
+
+	//	DBから最新のコメント５件を取得
+	public function fetchAllArchivesByUserIdForNew($user_id,$pages){
+		define('comment_per_page', 5);
+
+		$page = $pages;
+		$offset = comment_per_page * ($page -1);
+
+
+		$sql ="
+			SELECT a.*,u.user_name
+			FROM status a LEFT JOIN user u ON a.user_id = u.id LEFT JOIN following f ON f.following_id = a.user_id AND f.user_id = :user_id
+			WHERE f.user_id = :user_id OR u.id = :user_id
+			ORDER BY a.created_at DESC
+			LIMIT ".$offset.",".comment_per_page;
+
+		return $this->fetchAll($sql,array(
+			':user_id' => $user_id));
+	}
 }

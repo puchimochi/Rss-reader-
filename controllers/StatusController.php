@@ -7,12 +7,33 @@ class Statuscontroller extends Controller{
 	//	コメントホーム
 	public function indexAction(){
 		$user = $this->session->get('user');
-		$statuses = $this->db_manager->get('Status')->fetchAllArchivesByUserId($user['id']);
+		$status = $this->db_manager->Status->fetchAllArchivesByUserId($user['id']);
+
+		if(!isset($_GET['page'])){
+			$page = '1';
+		} else {
+			$page = $_GET['page'];
+		}
+
+		$statuses = $this->db_manager->Status->fetchAllArchivesByUserIdForNew($user['id'],$page);
+		$comment_per_page=5;
+		$total = count($status);
+		$totalPages = ceil( $total / $comment_per_page);
+
+		$offset = $comment_per_page * ($page -1);
+		$from = $offset +1;
+		$to = ($offset + $comment_per_page) < $total ? ($offset + $comment_per_page) : $total;
+
 
 		return $this->render(array(
 			'comment' =>'',
 			'statuses' => $statuses,
 			'_token' => $this->generateCsrfToken('status/post'),
+			'totalPages' =>$totalPages,
+			'page' => $page,
+			'total' => $total,
+			'from' => $from,
+			'to' => $to,
 			));
 	}
 
@@ -43,7 +64,7 @@ class Statuscontroller extends Controller{
 		}
 
 		$user = $this->session->get('user');
-		$statuses = $this->db_manager->get('Status')->fetchAllArchivesByUserId($user['id']);
+		$statuses = $this->db_manager->Status->fetchAllArchivesByUserId($user['id']);
 
 		return $this->render(array(
 			'errors' => $errors,
@@ -56,15 +77,15 @@ class Statuscontroller extends Controller{
 
 	//ユーザー一覧
 	public function userAction($params){
-		$guestUser = $this->db_manager->get('User')->fetchByUserName($params['user_name']);
+		$guestUser = $this->db_manager->User->fetchByUserName($params['user_name']);
 		if(! $guestUser){
 			$this->forward404();
 		}
 
-		$statuses = $this->db_manager->get('Status')->fetchAllByUserId($guestUser['id']);
+		$statuses = $this->db_manager->Status->fetchAllByUserId($guestUser['id']);
 
 		$user = $this->session->get('user');
-		$followings = $this->db_manager->get('User')->fetchAllFollowingsByUserId($user['id']);
+		$followings = $this->db_manager->User->fetchAllFollowingsByUserId($user['id']);
 
 
 		return $this->render(array(
@@ -78,7 +99,7 @@ class Statuscontroller extends Controller{
 
 	//コメント詳細
 	public function showAction($params){
-		$status = $this->db_manager->get('Status')->fetchByIdAndUserName($params['id'],$params['user_name']);
+		$status = $this->db_manager->Status->fetchByIdAndUserName($params['id'],$params['user_name']);
 
 		if(! $status){
 			$this->forward404();
