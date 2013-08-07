@@ -52,5 +52,19 @@ class RssController extends Controller
 			));
 	}
 
+	public function addAction()
+	{
+		$url = 'http://feed.pixnet.net/blog/posts/rss/ccsophia';
+
+		$title = 'mochimochi';
+		$description = 'test';
+		$user = $this->session->get('user');
+		$user_id = $user['id'];
+
+		$this->db_manager->get('Rss')->insert($url,$title,$description,$user_id);
+
+		return $this->redirect('/rss');
+	}
+
 
 }

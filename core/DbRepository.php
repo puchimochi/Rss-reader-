@@ -30,6 +30,14 @@ abstract class DbRepository
     }
 
     /**
+     *PDOオブジェクトを取得
+     *
+     */
+    public function getConnection()
+    {
+        return $this->con;
+    }
+    /**
      * クエリを実行
      *
      * @param string $sql
