@@ -2,6 +2,8 @@
 
 class RssController extends Controller
 {
+		protected $auth_actions = array('index','post');
+
 	//RSSフィード一覧の表示する
 	public function indexAction()
 	{
@@ -16,10 +18,9 @@ class RssController extends Controller
 
 		usort($entries, create_function('$a,$b','return(strtotime($a[\'created_at\']) < strtotime($b[\'created_at\']));'));
 		return $this->render(array(
-			'sites' => $sites,
 			'entries'=> $entries,
+			'_token' => $this->generateCsrfToken('rss/add'),
 			));
-
 	}
 
 	/**
@@ -28,21 +29,65 @@ class RssController extends Controller
 	*/
 	public function addAction()
 	{
-		$user = $this->session->get('user');
-		$userId = $user['id'];
 
-		$url = 'http://www.wretch.cc/blog/strawberry45&rss20=1';
-		$title = "haru";
-		$description = "test";
-		$result = $this->db_manager->Rss->insert($url,$title,$description);
-
-		if (!$result['isExisted']) {
-			$this->updateSiteAction($url,$result['site_id']);
+		if (!$this->request->isPost()) {
+			$this->forward404();
 		}
 
-		$this->updateSiteListAction($result['site_id'],$userId);
+		$token = $this->request->getPost('_token');
+		if (! $this->checkCsrfToken('rss/add',$token)) {
+			return $this->redirect('/rss');
+		}
 
-		return $this->redirect('/rss');
+		$url = $this->request->getPost('url');
+		$errors = array();
+		//$header = get_headers($url);
+
+		if (! strlen($url)) {
+			$errors[] = 'URLを入力してください。';
+		}/*elseif (filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED)) {
+			# URLが正しいかチェック
+			$errors[] = '正しいURLを入力してください。';
+		}
+
+		elseif (!preg_match('#^HTTP/.*\s+[200|302]+\s#i', $header[0])) {
+			# URLが存在しているかチェック
+			$errors[] = '正しいURLが必要です。';
+		}
+*/
+		if (count($errors) === 0) {
+			$user = $this->session->get('user');
+			$userId = $user['id'];
+
+			$result = $this->db_manager->Rss->insert($url);
+
+			if (!$result['isExisted']) {
+			$this->updateSiteAction($url,$result['site_id']);
+			}
+
+			$this->updateSiteListAction($result['site_id'],$userId);
+
+			return $this->redirect('/rss');
+
+		}
+
+		$user = $this->session->get('user');
+		$sites = $this->db_manager->Rss->fetchAllUrlId($user['id']);
+		foreach ($sites as $site ) {
+			$items= $this->db_manager->Rss->fetchAllEntry($site['site_id']);
+					foreach ($items as $item){
+						$entries[] = $item;
+			}
+		}
+
+		usort($entries, create_function('$a,$b','return(strtotime($a[\'created_at\']) < strtotime($b[\'created_at\']));'));
+
+
+		return $this->render(array(
+			'errors'	=> $errors,
+			'_token'	=> $this->generateCsrfToken('rss/add'),
+			'entries' => $entries,
+			),'index');
 	}
 
 	public function updateSiteListAction($siteId,$userId)

@@ -2,7 +2,7 @@
 
 class RssRepository extends DbRepository{
 
-	public function insert($url,$title,$description){
+	public function insert($url){
 		$now = new DateTime();
 		$isExisted = false;
 
@@ -12,13 +12,11 @@ class RssRepository extends DbRepository{
 
 		if(!$stmt){
 					$sql ="
-						INSERT INTO site(site_url, site_title, description, created_at) VALUES (:site_url,:site_title,:description,:created_at)
+						INSERT INTO site(site_url, created_at) VALUES (:site_url,:created_at)
 						";
 
 			$stmt = $this->execute($sql,array(
 				':site_url' => $url,
-				':site_title' => $title,
-				':description' => $description,
 				':created_at' => $now->format('Y-m-d H:i:s'),
 				));
 

@@ -16,6 +16,7 @@
 			<?php if($session->isAuthenticated()):?>
 			<a href="<?php echo $base_url;?>/">ホーム</a>
 			<a href="<?php echo $base_url;?>/account">アカウント</a>
+			<a href="<?php echo $base_url;?>/rss">RSSリーダー</a>
 			<a href="<?php echo $base_url;?>/account/signout">ログアウト</a>
 		<?php else:?>
 			<a href="<?php echo $base_url;?>/account/signin">ログイン</a>

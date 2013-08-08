@@ -1,16 +1,20 @@
 <?php $this->setLayoutVar('title','RSS reader');?>
 
 <h2>Rss Reader</h2>
-<form>
+
+<form action= "<?php echo $base_url;?>/rss/add" method = "post">
+	<input type="hidden" name="_token" value="<?php echo $this->escape($_token);?>">
+	<?php if(isset($errors) && count($errors) > 0 ):?>
+	<?php echo $this->render('errors' , array('errors' => $errors));?>
+<?php endif;?>
+	<p><input type = "text" name="url"></p>
+	<p><input type="submit" value="追加"></p>
 </form>
 
 <hr>
-<div>
+<div id="entries">
 	<?php foreach($entries as $entry):?>
-	title :<?php echo $this->escape($entry['title']);?>
-	<hr>
-	<br>
-	内容：<?php echo $entry['content'];?>
+	<?php echo $this->render('rss/rss',array('entry' => $entry));?>
 	<hr>
 <?php endforeach;?>
 </div>
