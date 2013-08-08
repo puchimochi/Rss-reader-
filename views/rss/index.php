@@ -1,15 +1,16 @@
 <?php $this->setLayoutVar('title','RSS reader');?>
 
-<h2>Rss test</h2>
+<h2>Rss Reader</h2>
+<form>
+</form>
 
-
-<div id = "rss">
-	<?php foreach($entries as $entry ):?>
-	<?php echo $entry['title'];?>
+<hr>
+<div>
+	<?php foreach($entries as $entry):?>
+	title :<?php echo $this->escape($entry['title']);?>
 	<hr>
-	<?php echo $entry['content'];?>
+	<br>
+	内容：<?php echo $entry['content'];?>
 	<hr>
-	<?php echo $entry['date'];?>
-	<hr>
-	<?php endforeach;?>
- </div>
+<?php endforeach;?>
+</div>

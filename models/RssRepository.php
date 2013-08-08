@@ -2,68 +2,93 @@
 
 class RssRepository extends DbRepository{
 
-	public function insert($url,$title,$description,$user_id){
+	public function insert($url,$title,$description){
 		$now = new DateTime();
+		$isExisted = false;
 
-		$sql ="
-		INSERT INTO site(site_url, site_title, description, created_at) VALUES (:site_url,:site_title,:description,:created_at)
+		$sql = " SELECT site_url FROM site WHERE site_url = :site_url
 		";
+		$stmt = $this->fetch($sql,array(':site_url' => $url));
 
-		$stmt = $this->execute($sql,array(
-			':site_url' => $url,
-			':site_title' => $title,
-			':description' => $description,
-			':created_at' => $now->format('Y-m-d H:i:s'),
-			));
+		if(!$stmt){
+					$sql ="
+						INSERT INTO site(site_url, site_title, description, created_at) VALUES (:site_url,:site_title,:description,:created_at)
+						";
+
+			$stmt = $this->execute($sql,array(
+				':site_url' => $url,
+				':site_title' => $title,
+				':description' => $description,
+				':created_at' => $now->format('Y-m-d H:i:s'),
+				));
+
 			//PDOオブジェクトを取得
 			$con = $this->getConnection();
 			//最後に挿入された行の ID あるいはシーケンスの値を返す
-			$site_id =$con->lastInsertId();
+			$siteId =$con->lastInsertId();
+			$isExisted = false;
+		} else {
+			$sql = " SELECT site_id FROM site WHERE site_url = :site_url";
+			$site= $this->fetch($sql,array(':site_url' => $url));
+			$siteId = $site['site_id'];
+			$isExisted = true;
+		}
+		return array(
+			'site_id'=> $siteId,
+			'isExisted'=>$isExisted,);
+	}
+
+	public function insertRssList($siteId,$userId){
 
 		$sql = "
 			INSERT INTO sitelist(user_id,site_id) VALUES (:user_id,:site_id)
 			";
 
 		$stmt = $this->execute($sql,array(
-				':user_id' => $user_id,
-				':site_id' => $site_id,
+				':user_id' => $userId,
+				':site_id' => $siteId,
 				));
-		return $site_id;
 	}
 
-	public function insertRssData($site_id,$title,$link,$content,$date)
+	public function insertRssData($siteId,$title,$link,$content,$date)
 	{
 		$sql ="
 		INSERT INTO entry(site_id, title, link, content, created_at) VALUES (:site_id,:title,:link,:content,:created_at)
 		";
 
 		$stmt = $this->execute($sql,array(
-			':site_id' => $site_id,
-			':title' => $title,
-			':link' => $link,
-			':content' => $content,
-			':created_at' => $date
+			':site_id' 		=> $siteId,
+			':title' 		=> $title,
+			':link' 		=> $link,
+			':content' 		=> $content,
+			':created_at'	=> $date
 			));
 	}
 
-	// ユーザーのsite_listを取得
-	public function fetchAllUrlId($user_id)
+	/*ユーザーのsite_listを取得
+	*@params userId
+	*@return result
+	*/
+	public function fetchAllUrlId($userId)
 	{
 		$sql ="
 			SELECT site_id FROM sitelist WHERE user_id = :user_id
 		";
 
-		return $this->fetchAll($sql,array(':user_id' => $user_id));
+		return $this->fetchAll($sql,array(':user_id' => $userId));
 	}
 
-	//entryDBからデータを取り出す
-	public function fetchAllEntry($site_id)
+	/*entryDBからデータを取り出す
+	*@params siteId
+	*@return result
+	*/
+	public function fetchAllEntry($siteId)
 	{
 		$sql = "
 			SELECT * FROM entry WHERE site_id = :site_id
 		";
 
-		return $this->fetchAll($sql,array(':site_id' => $site_id));
+		return $this->fetchall($sql,array(':site_id' => $siteId));
 	}
 
 
