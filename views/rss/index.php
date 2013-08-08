@@ -7,7 +7,7 @@
 	<?php if(isset($errors) && count($errors) > 0 ):?>
 	<?php echo $this->render('errors' , array('errors' => $errors));?>
 <?php endif;?>
-	<p><input type = "text" name="url"></p>
+	<p><input type = "text" name="url" size="100"></p>
 	<p><input type="submit" value="追加"></p>
 </form>
 

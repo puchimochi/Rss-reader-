@@ -29,7 +29,6 @@ class RssController extends Controller
 	*/
 	public function addAction()
 	{
-
 		if (!$this->request->isPost()) {
 			$this->forward404();
 		}
@@ -54,7 +53,7 @@ class RssController extends Controller
 			# URLが存在しているかチェック
 			$errors[] = '正しいURLが必要です。';
 		}
-*/
+		*/
 		if (count($errors) === 0) {
 			$user = $this->session->get('user');
 			$userId = $user['id'];
@@ -62,10 +61,10 @@ class RssController extends Controller
 			$result = $this->db_manager->Rss->insert($url);
 
 			if (!$result['isExisted']) {
-			$this->updateSiteAction($url,$result['site_id']);
+				$this->updateSiteAction($url,$result['site_id']);
 			}
 
-			$this->updateSiteListAction($result['site_id'],$userId);
+			$this->db_manager->Rss->insertRssList($result['site_id'],$userId);
 
 			return $this->redirect('/rss');
 
@@ -82,7 +81,6 @@ class RssController extends Controller
 
 		usort($entries, create_function('$a,$b','return(strtotime($a[\'created_at\']) < strtotime($b[\'created_at\']));'));
 
-
 		return $this->render(array(
 			'errors'	=> $errors,
 			'_token'	=> $this->generateCsrfToken('rss/add'),
@@ -90,12 +88,7 @@ class RssController extends Controller
 			),'index');
 	}
 
-	public function updateSiteListAction($siteId,$userId)
-	{
-		$this->db_manager->Rss->insertRssList($siteId,$userId);
-	}
-
-	/**
+	/*
 	* 新しいURLが追加された時にデータを取得しDBに格納する
 	* @params $url $siteId
 	*/
@@ -106,7 +99,9 @@ class RssController extends Controller
 			if(!$rss){
 				$this->forward404();
 			}else{
-				$site_title = $rss->channel->title;
+				$siteTitle = $rss->channel->title;
+				//$this->db_manager->Rss->insertSiteTitle($siteId,$siteTitle);
+
 				foreach ($rss->channel->item as $item ) {
 					date_default_timezone_set('Asia/Tokyo');
 					$date = date('Y-m-d H:i:s',strtotime($item -> pubDate));
@@ -132,12 +127,9 @@ class RssController extends Controller
 					$link = $entry['link'];
 					$content = $entry['content'];
 					$date = $entry['date'];
-					$this->db_manager->Rss->insertRssData($siteId,$title,$link,$content,$date);
+					$this->db_manager->Rss->insertEntry($siteId,$title,$link,$content,$date);
 				}
 			}
 	}
-
-
-
 
 }

@@ -33,7 +33,8 @@ class RssRepository extends DbRepository{
 		}
 		return array(
 			'site_id'=> $siteId,
-			'isExisted'=>$isExisted,);
+			'isExisted'=>$isExisted
+			);
 	}
 
 	public function insertRssList($siteId,$userId){
@@ -48,7 +49,20 @@ class RssRepository extends DbRepository{
 				));
 	}
 
-	public function insertRssData($siteId,$title,$link,$content,$date)
+	public function insertSiteTitle($siteId,$siteTitle)
+	{
+		$sql ="
+		INSERT INTO site(site_title) VALUES(:site_title) WHERE site_id = :site_id
+		";
+
+		$stmt = $this->execute($sql,array(
+			':site_title' => $siteTitle,
+			':site_id' => $siteId
+			));
+
+	}
+
+	public function insertEntry($siteId,$title,$link,$content,$date)
 	{
 		$sql ="
 		INSERT INTO entry(site_id, title, link, content, created_at) VALUES (:site_id,:title,:link,:content,:created_at)
