@@ -31,6 +31,8 @@ class MiniBlogApplication extends Application{
 				=>array('controller' => 'rss','action' => 'index'),
 			'/rss/add'
 				=>array('controller' => 'rss' ,'action' => 'add'),
+			'/rss/delete'
+				=>array('controller' => 'rss' ,'action' => 'deleteRss'),
 			);
 	}
 

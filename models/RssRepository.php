@@ -2,6 +2,7 @@
 
 class RssRepository extends DbRepository{
 
+	//siteテーブルにレコード追加
 	public function insert($url){
 		$now = new DateTime();
 		$isExisted = false;
@@ -37,6 +38,7 @@ class RssRepository extends DbRepository{
 			);
 	}
 
+	//sitelistテーブルにレコード追加
 	public function insertRssList($siteId,$userId){
 
 		$sql = "
@@ -49,19 +51,21 @@ class RssRepository extends DbRepository{
 				));
 	}
 
-	public function insertSiteTitle($siteId,$siteTitle)
+	//siteテーブルにサイトタイトルを追加
+	public function updateSiteTitle($siteId,$siteTitle)
 	{
 		$sql ="
-		INSERT INTO site(site_title) VALUES(:site_title) WHERE site_id = :site_id
+			UPDATE site SET site_title = :site_title
+			WHERE site_id = :site_id
 		";
 
 		$stmt = $this->execute($sql,array(
 			':site_title' => $siteTitle,
 			':site_id' => $siteId
 			));
-
 	}
 
+	//entryテーブルにレコード追加
 	public function insertEntry($siteId,$title,$link,$content,$date)
 	{
 		$sql ="
@@ -78,10 +82,10 @@ class RssRepository extends DbRepository{
 	}
 
 	/*ユーザーのsite_listを取得
-	*@params userId
-	*@return result
+	@params userId
+	@return result
 	*/
-	public function fetchAllUrlId($userId)
+	public function fetchAllRssId($userId)
 	{
 		$sql ="
 			SELECT site_id FROM sitelist WHERE user_id = :user_id
@@ -103,5 +107,27 @@ class RssRepository extends DbRepository{
 		return $this->fetchall($sql,array(':site_id' => $siteId));
 	}
 
+	public function fetchAllTitle($siteId)
+	{
+		$sql = "
+			SELECT site_id,site_title  FROM site WHERE site_id = :site_id
+		";
+
+		return $this->fetchall($sql,array(
+			':site_id' => $siteId));
+	}
+
+	//sitelistテーブルのsiteid削除
+	public function deleteRssFromList($userId,$siteId)
+	{
+		$sql = "
+			DELETE FROM sitelist WHERE user_id = :user_id AND site_id = :site_id
+		";
+
+		$stmt = $this->execute($sql,array(
+			':user_id' => $userId,
+			':site_id' => $siteId,
+			));
+	}
 
 }

@@ -3,6 +3,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
 	<title><?php if (isset($title)): echo $this->escape($title).'-'; endif;?>Mochi Blog</title>
 </head>
 <body>
