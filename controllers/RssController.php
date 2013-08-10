@@ -10,6 +10,12 @@ class RssController extends Controller
 		$user = $this->session->get('user');
 		$entries = $this->showAllRssAction($user);
 		$siteTitles = $this->showAllTitle($user);
+		if (empty($entries)) {
+			$entries = array();
+		}
+		if (empty($siteTitles)) {
+			$siteTitles = array();
+		}
 
 		return $this->render(array(
 			'entries'	=> $entries,
@@ -78,6 +84,7 @@ class RssController extends Controller
 	*/
 	public function showAllRssAction($user)
 	{
+		$entries = array();
 		$sites = $this->db_manager->Rss->fetchAllRssId($user['id']);
 		foreach ($sites as $site ) {
 			$items= $this->db_manager->Rss->fetchAllEntry($site['site_id']);
@@ -97,6 +104,7 @@ class RssController extends Controller
 	*/
 	public function showAllTitle($user)
 	{
+		$siteTitles = array();
 		$sites = $this->db_manager->Rss->fetchAllRssId($user['id']);
 		foreach ($sites as $site) {
 			$items = $this->db_manager->Rss->fetchAllTitle($site['site_id']);
@@ -113,7 +121,9 @@ class RssController extends Controller
 		$user = $this->session->get('user');
 		$siteId = $this->request->getPost('site_id');
 		$result = $this->db_manager->Rss->deleteRssFromList($user['id'],$siteId);
-
+		if (!$result) {
+			$this->redirect('/');
+		}
 		return $this->redirect('/rss');
 	}
 

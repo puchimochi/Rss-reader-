@@ -128,6 +128,8 @@ class RssRepository extends DbRepository{
 			':user_id' => $userId,
 			':site_id' => $siteId,
 			));
+
+		return $stmt;
 	}
 
 }
