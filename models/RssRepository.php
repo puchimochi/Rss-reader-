@@ -12,9 +12,8 @@ class RssRepository extends DbRepository{
 		$stmt = $this->fetch($sql,array(':site_url' => $url));
 
 		if(!$stmt){
-					$sql ="
-						INSERT INTO site(site_url, created_at) VALUES (:site_url,:created_at)
-						";
+			$sql ="
+				INSERT INTO site(site_url, created_at) VALUES (:site_url,:created_at)";
 
 			$stmt = $this->execute($sql,array(
 				':site_url' => $url,

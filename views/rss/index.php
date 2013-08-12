@@ -1,6 +1,7 @@
 <?php $this->setLayoutVar('title','RSS reader');?>
 
 <h2>Rss Reader</h2>
+
 <form action= "<?php echo $base_url;?>/rss/add" method = "post">
 	<input type="hidden" name="_token" value="<?php echo $this->escape($_token);?>">
 	<?php if(isset($errors) && count($errors) > 0 ):?>
