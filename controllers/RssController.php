@@ -116,6 +116,16 @@ class RssController extends Controller
 		return $siteTitles;
 	}
 
+	public function showAllForOneRss($siteId)
+	{
+		$entries = array();
+		$items= $this->db_manager->Rss->fetchAllEntry($site['site_id']);
+					foreach ($items as $item){
+						$entries[] = $item;
+					}
+		return $entries;
+	}
+
 	public function deleteRssAction()
 	{
 		$user = $this->session->get('user');
