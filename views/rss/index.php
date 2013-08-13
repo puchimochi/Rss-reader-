@@ -1,6 +1,22 @@
 <?php $this->setLayoutVar('title','RSS reader');?>
-
 <h2>Rss Reader</h2>
+<script type="text/javascript">
+$(function() {
+    	function validate() {
+    		if ($('#url').val() == "" ){
+				return false;
+			}
+			return true;
+		}
+
+		$('#addbtn').click(function  () {
+			if ( !validate()){
+				alert("Please enter URL");
+				return false;
+			}
+		});
+	});
+</script>
 
 <form action= "<?php echo $base_url;?>/rss/add" method = "post">
 	<input type="hidden" name="_token" value="<?php echo $this->escape($_token);?>">
@@ -8,8 +24,8 @@
 	<?php echo $this->render('errors' , array('errors' => $errors));?>
 	<?php endif;?>
 	<div class="input-append">
-	<input class="span2"  type = "text" name="url" size="100">
-	<input type="submit" value="追加"></p>
+	<input class="span2"  type = "text" name="url" size="100" id="url">
+	<input type="submit" id="addbtn" value="追加"></p>
 	</div>
 </form>
 <hr>
