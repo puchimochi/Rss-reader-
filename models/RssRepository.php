@@ -106,6 +106,7 @@ class RssRepository extends DbRepository{
 		return $this->fetchall($sql,array(':site_id' => $siteId));
 	}
 
+	//siteDBから各RSSサイトタイトルを取り出す
 	public function fetchAllTitle($siteId)
 	{
 		$sql = "

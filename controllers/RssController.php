@@ -52,14 +52,13 @@ class RssController extends Controller
 
 		if (count($errors) === 0) {
 			$user = $this->session->get('user');
-			$userId = $user['id'];
 			$result = $this->db_manager->Rss->insert($url);
 
 			if (!$result['isExisted']) {
 				$this->updateSiteAction($rss,$result['site_id']);
 			}
 
-			$this->db_manager->Rss->insertRssList($result['site_id'],$userId);
+			$this->db_manager->Rss->insertRssList($result['site_id'],$user['id']);
 
 			return $this->redirect('/rss');
 		}
