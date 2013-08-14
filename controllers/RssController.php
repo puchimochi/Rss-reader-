@@ -59,10 +59,8 @@ class RssController extends Controller
 			}
 
 			$this->db_manager->Rss->insertRssList($result['site_id'],$user['id']);
-
-			return $this->redirect('/rss');
 		}
-
+/*
 		$user = $this->session->get('user');
 		$blog = $this->showAllRssAction($user);
 		$entries = $blog['entries'];
@@ -74,6 +72,7 @@ class RssController extends Controller
 			'entries'	=> $entries,
 			'siteTitles'	=>$siteTitles,
 			),'index');
+		*/
 	}
 
 	/*ユーザーのRSSフィードを表示

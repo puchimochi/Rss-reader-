@@ -1,31 +1,15 @@
 <?php $this->setLayoutVar('title','RSS reader');?>
 <h2>Rss Reader</h2>
-<script type="text/javascript">
-$(function() {
-    	function validate() {
-    		if ($('#url').val() == "" ){
-				return false;
-			}
-			return true;
-		}
-
-		$('#addbtn').click(function  () {
-			if ( !validate()){
-				alert("Please enter URL");
-				return false;
-			}
-		});
-	});
-</script>
-
-<form action= "<?php echo $base_url;?>/rss/add" method = "post">
-	<input type="hidden" name="_token" value="<?php echo $this->escape($_token);?>">
-	<?php if(isset($errors) && count($errors) > 0 ):?>
-	<?php echo $this->render('errors' , array('errors' => $errors));?>
-	<?php endif;?>
+<script type="text/javascript" src="/js/rss_ajax.js"></script>
+<!-- <form action= "<?php echo $base_url;?>/rss/add" method = "post" id="addform"> -->
+<form>
+	<input type="hidden" name="_token" value="<?php echo $this->escape($_token);?>" id="token">
+	<!-- <?php if(isset($errors) && count($errors) > 0 ):?> -->
+	<!-- <?php echo $this->render('errors' , array('errors' => $errors));?> -->
+	<!-- <?php endif;?> -->
 	<div class="input-append">
 	<input class="span2"  type = "text" name="url" size="100" id="url">
-	<input type="submit" id="addbtn" value="追加"></p>
+	<input type="button" id="addbtn" value="追加"></p>
 	</div>
 </form>
 <hr>
@@ -43,12 +27,15 @@ $(function() {
 			<ul class="nav nav-list">
 				<li class="nav-header">Sidebar</li>
 				<?php foreach ($siteTitles as $siteTitle):?>
-				<li class="active"><a href="#"><?php echo $this->escape($siteTitle['site_title']) ;?></a></li>
-				<form action="<?php echo $base_url;?>/rss/delete" method ="post">
+				<li class="active" id="siteTitleId_<?php echo $this->escape($siteTitle['site_id']);?>" data-id="<?php echo $this->escape($siteTitle['site_id']);?>">
+				<?php echo $this->escape($siteTitle['site_title']) ;?>
+					<span class="delete">X</span>
+				</li>
+				<!-- <form action="<?php echo $base_url;?>/rss/delete" method ="post">
 				<input type="hidden" name="_token" value="<?php echo $this->escape($_token)?>"/>
 				<input type="hidden" name="site_id" value="<?php echo $this->escape($siteTitle['site_id']);?>">
-				<button type="submit" class="btn btn-small btn-primary">削除</button>
-				</form>
+				<button type="submit" class="btn btn-small btn-primary" id="deletebtn">削除</button>
+				</form>-->
 				<?php endforeach;?>
 			</ul>
 			</div><!--/.well -->
@@ -56,6 +43,11 @@ $(function() {
 	</div>
 </div>
 
+<script type="text/javascript" >
+$(function(){
+
+});
+</script>
 		<!-- <?php foreach ($siteTitles as $siteTitle):?> -->
 		<!-- <?php echo $this->escape($siteTitle['site_title']) ;?> -->
 		<!-- <form action="<?php echo $base_url;?>/rss/delete" method ="post"> -->

@@ -21,8 +21,8 @@ foreach ($sites as $site) {
 	$stmt->bindValue(':site_id',$siteId,PDO::PARAM_STR);
 	$stmt->execute();
 	$result = $stmt->fetch(PDO::FETCH_ASSOC);
-	//$maxDate = $result['created_at'];
-	$maxDate = date('Y-m-d H:i:s',strtotime($result['created_at']);
+	$maxDate = $result['created_at'];
+	//$maxDate = date('Y-m-d H:i:s',strtotime($result['created_at']);
 
 	foreach ($rss->channel->item as $item ) {
 		date_default_timezone_set('Asia/Tokyo');
