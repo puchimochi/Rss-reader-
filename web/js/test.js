@@ -26,10 +26,21 @@ $(function () {
 		if (confirm('Would U really want to delete it?')){
 			var site_id = $(this).parent().data('id');
 			alert(site_id);
-			$.post('/rss/delete',{site_id:site_id},function(rs){
-			$('#siteTitleId_'+site_id).fadeOut(100);
-				location.href="/rss";
-			});
+
+		$.ajax({
+			type:"POST",
+			url:"/rss/showlist",
+			data:{site_id:site_id},
+			success:function(data)
+			{
+				$('#content').html('success');
+				console.log(data);
+
+			},
+			error: function(xhr, textStatus, errorThrown){
+				alert('Error! ' + textStatus + ' ' + errorThrown);
+			}
+		});
 		}
 	});
 });

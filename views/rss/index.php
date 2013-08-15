@@ -16,7 +16,7 @@
 
 <div class="container-fluid">
 	<div class="row-fluid">
-		<div class="col-lg-9 col-lg-push-3">
+		<div class="col-lg-9 col-lg-push-3" id="content">
 		<?php foreach($entries as $entry):?>
 			<?php echo $this->render('rss/rss',array('entry' => $entry));?>
 			<hr>

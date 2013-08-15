@@ -122,7 +122,9 @@ class RssController extends Controller
 		if (!$result) {
 			$this->redirect('/');
 		}
-		return $this->redirect('/rss');
+		//return $this->redirect('/rss');
+		$msg = "success";
+		echo "success";
 	}
 
 	/*
@@ -199,4 +201,17 @@ class RssController extends Controller
 		return $siteTitles;
 	}
 
+	public function showlistAction()
+	{
+		$siteId = $this->request->getPost('site_id');
+		$entries = $this->db_manager->Rss->fetchAllEntry($siteId);
+		if (!$entries) {
+			echo "false";
+		}
+
+		$this->response->setHttpHeader('Content-type','application/json');
+		echo json_encode($entries);
+
+
+	}
 }

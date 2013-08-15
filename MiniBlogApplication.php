@@ -33,8 +33,11 @@ class MiniBlogApplication extends Application{
 				=>array('controller' => 'rss' ,'action' => 'add'),
 			'/rss/delete'
 				=>array('controller' => 'rss' ,'action' => 'deleteRss'),
+			'/rss/showlist'
+				=>array('controller' => 'rss' ,'action' => 'showlist'),
 			'/rss/:siteid'
 				=>array('controller' => 'rss' ,'action' => 'showForOneRss'),
+
 			);
 	}
 
