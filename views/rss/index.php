@@ -27,8 +27,7 @@
 			<ul class="nav nav-list">
 				<li class="nav-header">Sidebar</li>
 				<?php foreach ($siteTitles as $siteTitle):?>
-				<li class="active" id="siteTitleId_<?php echo $this->escape($siteTitle['site_id']);?>" data-id="<?php echo $this->escape($siteTitle['site_id']);?>"><a href="<?php echo $base_url;?>/rss/<?php echo $this->escape($siteTitle['site_id']);?>">
-				<?php echo $this->escape($siteTitle['site_title']) ;?></a>
+				<li class="active" id="siteTitleId_<?php echo $this->escape($siteTitle['site_id']);?>" data-id="<?php echo $this->escape($siteTitle['site_id']);?>"><a href="<?php echo $base_url;?>/rss/<?php echo $this->escape($siteTitle['site_id']);?>"><?php echo $this->escape($siteTitle['site_title']);?></a>
 					<span class="delete">X</span>
 				</li>
 				<?php endforeach;?>

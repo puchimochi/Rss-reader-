@@ -22,18 +22,13 @@ $(function () {
 			});
 	});
 
-	$(document).on('click', '.delete', function(){
-		if(confirm('Would U really want to delete it?')){
+	$(document).on('click','.delete',function(){
+		if (confirm('Would U really want to delete it?')){
 			var site_id = $(this).parent().data('id');
 			alert(site_id);
-			$.ajax({
-				type:"POST",
-				url:"/rss/delete",
-				data:site_id,
-				success:function(rs){
-					$('#siteTitleId'+site_id).fadeOut(100);
-					location.href="/rss";
-				},
+			$.post('/rss/delete',{site_id:site_id},function(rs){
+			$('#siteTitleId_'+site_id).fadeOut(100);
+				location.href="/rss";
 			});
 		}
 	});

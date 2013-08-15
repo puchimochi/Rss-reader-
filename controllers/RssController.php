@@ -169,16 +169,19 @@ class RssController extends Controller
 	//URLごとにデーターを取り出す
 	public function showForOneRssAction($params)
 	{
+		$user = $this->session->get('user');
 		$siteId = $params['siteid'];
 		$entries = $this->db_manager->Rss->fetchAllEntry($siteId);
-		$siteTitle = $this->db_manager->Rss->fetchAllTitle($siteId);
+		$siteTitle = $this->showAllTitle($user);
+		$this->db_manager->Rss->fetchAllTitle($siteId);
 		usort($entries, create_function('$a,$b','return(strtotime($a[\'created_at\']) < strtotime($b[\'created_at\']));'));
 		return $this->render(array(
 			'entries' => $entries,
-			));
+			'siteTitles' =>$siteTitle,
+			),'index');
 	}
 
-/*
+
 	// RSSサイトタイトルを表示する
 	// @params $user
 	// @return site_title,site_id
@@ -195,7 +198,5 @@ class RssController extends Controller
 
 		return $siteTitles;
 	}
-*/
-
 
 }
