@@ -1,6 +1,6 @@
 <?php $this->setLayoutVar('title','RSS reader');?>
 <h2>Rss Reader</h2>
-<script src="/js/ajax.js"></script>
+<script src="/js/test.js"></script>
 
 <form>
 	<input type="hidden" name="_token" value="<?php echo $this->escape($_token);?>" id="token">
