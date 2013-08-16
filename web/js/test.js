@@ -47,8 +47,9 @@ $(function () {
 				$('#content').html('<div class="accordion" id="accordion2"><div class="accordion-group" id="contentfeed"></div></div>');
 
 				$.each(data, function(i,value){
-					$('#contentfeed').append('<div class="accordion-heading"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">title:'+ data[i].title+ '</a></div><div id="collapseOne" class="accordion-body collapse in"><div class="accordion-inner">投稿日時：'+ data[i].created_at +'<br>'+data[i].content+'</div></div>');
+					$('#content').prepend('<div class="accordion" id="accordion2"><div class="accordion-group" id="contentfeed"><div class="accordion-heading"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">title:'+ data[i].title+ '</a></div><div id="collapseOne" class="accordion-body collapse in"><div class="accordion-inner">投稿日時：'+ data[i].created_at +'<br>'+data[i].content+'</div></div>');
 				});
+
 				console.log(data);
 			},
 			error: function(xhr, textStatus, errorThrown){
@@ -56,4 +57,6 @@ $(function () {
 			}
 		});
 	});
+
+	$('#lists').sortable();
 });
