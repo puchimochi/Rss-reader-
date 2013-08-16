@@ -203,15 +203,21 @@ class RssController extends Controller
 
 	public function showlistAction()
 	{
+		ob_start();
 		$siteId = $this->request->getPost('site_id');
 		$entries = $this->db_manager->Rss->fetchAllEntry($siteId);
 		if (!$entries) {
 			echo "false";
 		}
 
-		$this->response->setHttpHeader('Content-type','application/json');
-		echo json_encode($entries);
+		$result =json_encode($entries);
+		header("Content-Type: application/json; charset=utf-8");
+		echo $result;
+		ob_end_flush();
 
+		//$this->response->setStatusCode(200,'OK');
+		//$this->response->setContent($result);
+		///$this->response->send();
 
 	}
 }

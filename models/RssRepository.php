@@ -100,7 +100,7 @@ class RssRepository extends DbRepository{
 	public function fetchAllEntry($siteId)
 	{
 		$sql = "
-			SELECT * FROM entry WHERE site_id = :site_id
+			SELECT * FROM entry WHERE site_id = :site_id ORDER BY created_at DESC
 		";
 
 		return $this->fetchall($sql,array(':site_id' => $siteId));
