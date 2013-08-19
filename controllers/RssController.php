@@ -24,6 +24,7 @@ class RssController extends Controller
 	*/
 	public function addAction()
 	{
+
 		if (!$this->request->isPost()) {
 			$this->forward404();
 		}
@@ -36,18 +37,20 @@ class RssController extends Controller
 		$url = $this->request->getPost('url');
 		$errors = array();
 
+
 		if (! strlen($url)) {
 			$errors[] = 'URLを入力してください。';
-		}
+		}else{
 
-		$rss = @simplexml_load_file($url,'SimpleXMLElement', LIBXML_NOCDATA);
-		$header = get_headers($url);
-		if (!$rss) {
-			// 読み込めなかった場合のエラー処理
-			$errors[] = '正しいRSSのURLを入力してください。';
-		}elseif (!(strstr($header[0], '200'))) {
-			//URLが有効かどうかをチェック
-			$errors[] = '正しいURLを入力してください。';
+			$rss = @simplexml_load_file($url,'SimpleXMLElement', LIBXML_NOCDATA);
+			$header = get_headers($url);
+			if (!$rss) {
+				// 読み込めなかった場合のエラー処理
+				$errors[] = '正しいRSSのURLを入力してください。';
+			}elseif (!(strstr($header[0], '200'))) {
+				//URLが有効かどうかをチェック
+				$errors[] = '正しいURLを入力してください。';
+			}
 		}
 
 		if (count($errors) === 0) {
@@ -58,9 +61,15 @@ class RssController extends Controller
 				$this->updateSiteAction($rss,$result['site_id']);
 			}
 
-			$this->db_manager->Rss->insertRssList($result['site_id'],$user['id']);
+			$result = $this->db_manager->Rss->insertRssList($result['site_id'],$user['id']);
+			if (!$result) {
+				return $this->redirect('/rss');
+			}
+
+			return $this->redirect('/rss');
+
 		}
-/*
+
 		$user = $this->session->get('user');
 		$blog = $this->showAllRssAction($user);
 		$entries = $blog['entries'];
@@ -72,7 +81,7 @@ class RssController extends Controller
 			'entries'	=> $entries,
 			'siteTitles'	=>$siteTitles,
 			),'index');
-		*/
+
 	}
 
 	/*ユーザーのRSSフィードを表示
@@ -214,6 +223,7 @@ class RssController extends Controller
 		header("Content-Type: application/json; charset=utf-8");
 		echo $result;
 		ob_end_flush();
+		exit();
 
 		//$this->response->setStatusCode(200,'OK');
 		//$this->response->setContent($result);

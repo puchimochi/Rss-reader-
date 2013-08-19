@@ -41,13 +41,27 @@ class RssRepository extends DbRepository{
 	public function insertRssList($siteId,$userId){
 
 		$sql = "
+		 SELECT site_id FROM sitelist WHERE (user_id = :user_id) AND (site_id = :site_id)
+		";
+
+		$stmt = $this->fetchAll($sql, array(
+			':user_id' =>$userId,
+			':site_id' =>$siteId,
+			));
+
+		if (!$stmt) {
+			$sql = "
 			INSERT INTO sitelist(user_id,site_id) VALUES (:user_id,:site_id)
 			";
 
-		$stmt = $this->execute($sql,array(
+			$stmt = $this->execute($sql,array(
 				':user_id' => $userId,
 				':site_id' => $siteId,
 				));
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	//siteテーブルにサイトタイトルを追加

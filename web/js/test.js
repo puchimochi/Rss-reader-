@@ -1,5 +1,5 @@
 $(function () {
-	function validate(){
+	/*function validate(){
 		if ($('#url').val() == "") {
 			return false;
 		}
@@ -8,20 +8,10 @@ $(function () {
 
 	$('#addbtn').click(function(){
 		if (!validate()) {
-			alert("please enter right URL!");
+			$('.error_list').append('<ul class="error_list"><li>Please enter RSS URL!</li></ul>');
 		}
-		var data = {_token:$('#token').val(),url:$('#url').val()};
-		$.ajax({
-			type:"POST",
-			url:"/rss/add",
-			data:data,
-			success:function(rs)
-			{
-				location.href="/rss";
-			},
-			});
 	});
-
+*/
 	$(document).on('click','.delete',function(){
 		if (confirm('Would U really want to delete it?')){
 			var site_id = $(this).parent().data('id');
@@ -41,7 +31,7 @@ $(function () {
 			type:"POST",
 			url:"/rss/showlist",
 			data:{site_id:site_id},
-			//dataType:'json',
+			dataType:'json',
 			success:function(data)
 			{
 				$('#content').html('<div class="accordion" id="accordion2"><div class="accordion-group" id="contentfeed"></div></div>');
@@ -53,7 +43,9 @@ $(function () {
 				console.log(data);
 			},
 			error: function(xhr, textStatus, errorThrown){
+				console.log(arguments);
 				alert('Error! ' + textStatus + ' ' + errorThrown);
+
 			}
 		});
 	});
