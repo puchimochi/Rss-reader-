@@ -156,11 +156,15 @@ class RssController extends Controller
 					$content = $item->description;
 				}
 
+			if (preg_match('/<img(?:.*?)src=[\"\']([^>]*?)\.(jpg|JPG)[\"\'](?:.*?)>/e' , $content, $image)){
+				$img = ''.$image[1].'.jpg';}
+
 			$entryArr[] =array(
 				'site_id' => $siteId,
 				'title' => $item->title,
 				'link' => $item->link,
 				'content' => $content,
+				'photo' => $img,
 				'date' => $date);
 			}
 
@@ -171,8 +175,9 @@ class RssController extends Controller
 				$title = $entry['title'];
 				$link = $entry['link'];
 				$content = $entry['content'];
+				$photo  =$entry['photo'];
 				$date = $entry['date'];
-				$this->db_manager->Rss->insertEntry($siteId,$title,$link,$content,$date);
+				$this->db_manager->Rss->insertEntry($siteId,$title,$link,$content,$photo,$date);
 				}
 		}
 	}

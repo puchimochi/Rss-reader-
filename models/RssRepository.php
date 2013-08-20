@@ -79,10 +79,10 @@ class RssRepository extends DbRepository{
 	}
 
 	//entryテーブルにレコード追加
-	public function insertEntry($siteId,$title,$link,$content,$date)
+	public function insertEntry($siteId,$title,$link,$content,$photo,$date)
 	{
 		$sql ="
-		INSERT INTO entry(site_id, title, link, content, created_at) VALUES (:site_id,:title,:link,:content,:created_at)
+		INSERT INTO entry(site_id, title, link, content,photo, created_at) VALUES (:site_id,:title,:link,:content,:photo,:created_at)
 		";
 
 		$stmt = $this->execute($sql,array(
@@ -90,6 +90,7 @@ class RssRepository extends DbRepository{
 			':title' 		=> $title,
 			':link' 		=> $link,
 			':content' 		=> $content,
+			':photo'		=>$photo,
 			':created_at'	=> $date
 			));
 	}

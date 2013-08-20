@@ -30,7 +30,6 @@
 				<li class="nav-header"><a href="<?php echo $base_url?>/rss">RSSホーム</a></li>
 				<?php foreach ($siteTitles as $siteTitle):?>
 				<li class="active" id="siteTitleId_<?php echo $this->escape($siteTitle['site_id']);?>" data-id="<?php echo $this->escape($siteTitle['site_id']);?>"><a id="blog"><?php echo $this->escape($siteTitle['site_title']);?></a>
-					<button class="close">&times;</button>
 					<span class="delete">X</span>
 				</li>
 				<?php endforeach;?>

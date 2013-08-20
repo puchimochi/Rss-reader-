@@ -31,7 +31,7 @@ $(function () {
 			type:"POST",
 			url:"/rss/showlist",
 			data:{site_id:site_id},
-			dataType:'json',
+			//dataType:'json',
 			success:function(data)
 			{
 				$('#content').html('<div class="accordion" id="accordion2"><div class="accordion-group" id="contentfeed"></div></div>');
