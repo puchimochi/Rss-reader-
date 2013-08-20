@@ -12,6 +12,7 @@ $(function () {
 		}
 	});
 */
+	//RSSフィードを削除
 	$(document).on('click','.delete',function(){
 		if (confirm('Would U really want to delete it?')){
 			var site_id = $(this).parent().data('id');
@@ -22,7 +23,7 @@ $(function () {
 			});
 		}
 	});
-
+	//個別に記事を表示
 	$(document).on('click','.active',function(){
 		var site_id = $(this).data('id');
 		//alert(site_id);
@@ -35,9 +36,10 @@ $(function () {
 			success:function(data)
 			{
 				$('#content').html('<div class="accordion" id="accordion2"><div class="accordion-group" id="contentfeed"></div></div>');
-
+				var count = 1;
 				$.each(data, function(i,value){
-					$('#content').prepend('<div class="accordion" id="accordion2"><div class="accordion-group" id="contentfeed"><div class="accordion-heading"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">title:'+ data[i].title+ '</a></div><div id="collapseOne" class="accordion-body collapse in"><div class="accordion-inner">投稿日時：'+ data[i].created_at +'<br>'+data[i].content+'</div></div>');
+					$('#content').prepend('<div class="accordion" id="accordion2"><div class="accordion-group" id="contentfeed"><div class="accordion-heading"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse'+count+'">title:'+data[i].title+'</a></div><div id="collapse'+count+'" class="accordion-body collapse in"><div class="accordion-inner">投稿日時：'+ data[i].created_at +'<br>'+data[i].content+'</div></div>');
+					count ++;
 				});
 
 				console.log(data);
@@ -49,6 +51,11 @@ $(function () {
 			}
 		});
 	});
-
-	$('#lists').sortable();
+	//JqueryUIで並び替え、データーベースに順番を保存
+	$('#lists').sortable({
+		update:function(){
+			$.post('/rss/updatelist',{list:$(this).sortable('serialize')}
+				);
+		}
+	});
 });

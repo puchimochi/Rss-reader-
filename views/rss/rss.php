@@ -8,7 +8,7 @@
     <div id="collapseOne" class="accordion-body collapse in">
       <div class="accordion-inner">
         投稿日時：<?php echo $this->escape($entry['created_at']);?><br>
-        <?php echo $entry['content'];?>
+         <?php //echo $entry['content'];?>
       </div>
     </div>
   </div>

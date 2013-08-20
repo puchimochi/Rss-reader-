@@ -102,7 +102,7 @@ class RssRepository extends DbRepository{
 	public function fetchAllRssId($userId)
 	{
 		$sql ="
-			SELECT site_id FROM sitelist WHERE user_id = :user_id
+			SELECT site_id FROM sitelist WHERE user_id = :user_id ORDER BY seq ASC
 		";
 
 		return $this->fetchAll($sql,array(':user_id' => $userId));
@@ -145,6 +145,17 @@ class RssRepository extends DbRepository{
 			));
 
 		return $stmt;
+	}
+
+	//順番を更新
+	public function updateSequence($count,$siteId)
+	{
+		$sql = " UPDATE sitelist SET seq = :seq  WHERE site_id = :site_id
+			";
+		$stmt = $this->execute($sql, array(
+			':seq' => $count,
+			'site_id'=> $siteId,
+			));
 	}
 
 }

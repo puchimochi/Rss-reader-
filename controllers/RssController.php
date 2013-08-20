@@ -8,7 +8,7 @@ class RssController extends Controller
 	public function indexAction()
 	{
 		$user = $this->session->get('user');
-		$blog = $this->showAllRssAction($user);
+		$blog = $this->showAllRss($user);
 		$entries = $blog['entries'];
 		$siteTitles = $blog['siteTitles'];
 
@@ -71,7 +71,7 @@ class RssController extends Controller
 		}
 
 		$user = $this->session->get('user');
-		$blog = $this->showAllRssAction($user);
+		$blog = $this->showAllRss($user);
 		$entries = $blog['entries'];
 		$siteTitles = $blog['siteTitles'];
 
@@ -87,7 +87,7 @@ class RssController extends Controller
 	/*ユーザーのRSSフィードを表示
 	@params $user
 	*/
-	public function showAllRssAction($user)
+	public function showAllRss($user)
 	{
 		$entries = array();
 		$sites = $this->db_manager->Rss->fetchAllRssId($user['id']);
@@ -178,10 +178,41 @@ class RssController extends Controller
 				$photo  =$entry['photo'];
 				$date = $entry['date'];
 				$this->db_manager->Rss->insertEntry($siteId,$title,$link,$content,$photo,$date);
-				}
+			}
 		}
 	}
 
+//サイドバーのタイトルが押された時にajaxで記事を送信
+	public function showlistAction()
+	{
+		ob_start();
+		$siteId = $this->request->getPost('site_id');
+		$entries = $this->db_manager->Rss->fetchAllEntry($siteId);
+		if (!$entries) {
+			echo "false";
+		}
+
+		$result =json_encode($entries);
+		header("Content-Type: application/json; charset=utf-8");
+		echo $result;
+		ob_end_flush();
+		exit();
+	}
+
+	//JqueryUIで並び替え、データーベースに順番を保存
+	public function updateListAction()
+	{
+		$list=$this->request->getPost('list');
+		parse_str($list);
+		$count = 1;
+		foreach ($siteTitleId as $key => $siteId) {
+			$this->db_manager->Rss->updateSequence($count,$siteId);
+			$count ++;
+		}
+	}
+
+}
+/*
 	//URLごとにデーターを取り出す
 	public function showForOneRssAction($params)
 	{
@@ -214,25 +245,6 @@ class RssController extends Controller
 
 		return $siteTitles;
 	}
+*/
 
-	public function showlistAction()
-	{
-		ob_start();
-		$siteId = $this->request->getPost('site_id');
-		$entries = $this->db_manager->Rss->fetchAllEntry($siteId);
-		if (!$entries) {
-			echo "false";
-		}
 
-		$result =json_encode($entries);
-		header("Content-Type: application/json; charset=utf-8");
-		echo $result;
-		ob_end_flush();
-		exit();
-
-		//$this->response->setStatusCode(200,'OK');
-		//$this->response->setContent($result);
-		///$this->response->send();
-
-	}
-}
