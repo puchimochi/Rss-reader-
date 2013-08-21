@@ -92,20 +92,26 @@ class RssController extends Controller
 	public function showAllRss($user)
 	{
 		$entries = array();
-		$sites = $this->db_manager->Rss->fetchAllRssId($user['id']);
+		$userId = $user['id'];
+		$siteIds = $this->db_manager->Rss->fetchAllRssId($userId);
+		$items = $this->db_manager->Rss->fetchAllEntry($userId);
+		foreach ($items as $item) {
+			$entries[] = $item;
+		}
+/*
 		foreach ($sites as $site) {
 			$items= $this->db_manager->Rss->fetchAllEntry($site['site_id']);
 			foreach ($items as $item){
 				$entries[] = $item;
 			}
 		}
-
+*/
 		usort($entries, create_function('$a,$b','return(strtotime($a[\'created_at\']) < strtotime($b[\'created_at\']));'));
 
 		$siteTitles = array();
-		$sites = $this->db_manager->Rss->fetchAllRssId($user['id']);
-		foreach ($sites as $site) {
-			$items = $this->db_manager->Rss->fetchAllTitle($site['site_id']);
+		$siteIds = $this->db_manager->Rss->fetchAllRssId($userId);
+		foreach ($siteIds as $site =>$value) {
+			$items = $this->db_manager->Rss->fetchAllTitle($value['site_id']);
 			foreach ($items as $item) {
 				$siteTitles[] = $item;
 			}
@@ -189,7 +195,9 @@ class RssController extends Controller
 	{
 		ob_start();
 		$siteId = $this->request->getPost('site_id');
-		$entries = $this->db_manager->Rss->fetchAllEntry($siteId);
+		// $userId = $user['id'];
+
+		$entries = $this->db_manager->Rss->fetchEntryForOneRss($siteId);
 		if (!$entries) {
 			echo "false";
 		}

@@ -99,14 +99,32 @@ class RssRepository extends DbRepository{
 	*@params siteId
 	*@return result
 	*/
-	public function fetchAllEntry($siteId)
+	public function fetchAllEntry($userId,$status = 'unread')
 	{
 		$sql = "
-			SELECT * FROM entry WHERE site_id = :site_id ORDER BY created_at ASC
+			SELECT * FROM entry WHERE id =ANY(SELECT entry_id FROM sitelist WHERE user_id = :user_id AND status = :status) ORDER BY created_at ASC
 		";
 
-		return $this->fetchall($sql,array(':site_id' => $siteId));
+		return $this->fetchall($sql,array(
+			':status' => $status,
+			':user_id' => $userId
+			));
 	}
+
+	// 個別のサイト記事をとる
+	public function fetchEntryForOneRss($siteId,$status = 'unread')
+	{
+		$sql = "
+			SELECT * FROM entry WHERE id =ANY(SELECT entry_id FROM sitelist WHERE site_id = :site_id AND status = :status) ORDER BY created_at ASC
+		";
+
+		return $this->fetchAll($sql,array(
+			':status' => $status,
+			':site_id'=> $siteId
+			));
+	}
+
+
 
 	//siteDBから各RSSサイトタイトルを取り出す
 	public function fetchAllTitle($siteId)
