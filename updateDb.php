@@ -68,9 +68,31 @@ foreach ($sites as $site) {
 					if (!$result) {
 					echo "watch!";
 					}
+
+					$entryId =$con->lastInsertId();
+					$sql = "
+						SELECT user_id,site_id FROM sitelist WHERE site_id = :site_id
+					";
+					$stmt = $con->prepare($sql);
+					$stmt->bindValue(':site_id',$siteId,PDO::PARAM_STR);
+					$stmt->execute();
+					$results = $stmt->fetch(PDO::FETCH_ASSOC);
+					$userId = $results['user_id'];
+					$sql = "INSERT INTO sitelist(user_id,site_id,entry_id) VALUES (:user_id,:site_id,:entry_id)
+					";
+					$stmt->bindValue(':site_id',$siteId,PDO::PARAM_STR);
+					$stmt->bindValue(':user_id',$userId,PDO::PARAM_STR);
+					$stmt->bindValue(':entry_id',$entryId,PDO::PARAM_STR);
+					$stmt->execute();
+
+					if (!$results) {
+						echo"wrong";
+					}
+
 				}
 			}else{
 				echo "Empty!";
+
 			}
 		}
 	}

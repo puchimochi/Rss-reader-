@@ -81,6 +81,16 @@ class RssRepository extends DbRepository{
 			':created_at'	=> $date
 			));
 	}
+	//RSSを追加する際にentryIDを取り出すために
+	public function fetchAllEntryId($siteId)
+	{
+		$sql="
+			SELECT id FROM entry WHERE site_id = :site_id
+		";
+		return $this->fetchAll($sql, array(
+			':site_id'=>$siteId));
+
+	}
 
 	/*ユーザーのsite_listを取得
 	@params userId
@@ -124,8 +134,6 @@ class RssRepository extends DbRepository{
 			));
 	}
 
-
-
 	//siteDBから各RSSサイトタイトルを取り出す
 	public function fetchAllTitle($siteId)
 	{
@@ -161,6 +169,22 @@ class RssRepository extends DbRepository{
 			':seq' => $count,
 			'site_id'=> $siteId,
 			));
+	}
+
+	//既読未読状態を変える
+	public function updateEntryStatus($status,$userId,$entryId)
+	{
+		$sql = "
+			UPDATE sitelist SET status = :status WHERE user_id = :user_id AND entry_id = :entry_id
+		";
+
+		$stmt = $this->execute($sql, array(
+			':status' =>$status,
+			':user_id' =>$userId,
+			':entry_id' =>$entryId
+			));
+
+		return $stmt;
 	}
 
 }

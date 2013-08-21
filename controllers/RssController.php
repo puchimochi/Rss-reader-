@@ -27,7 +27,6 @@ class RssController extends Controller
 	*/
 	public function addAction()
 	{
-
 		if (!$this->request->isPost()) {
 			$this->forward404();
 		}
@@ -58,15 +57,18 @@ class RssController extends Controller
 
 		if (count($errors) === 0) {
 			$user = $this->session->get('user');
+			$userId =$user['id'];
 			$result = $this->db_manager->Rss->insert($url);
 			$siteId =$result['site_id'];
+
 			if (!$result['isExisted']) {
 				$this->updateSiteAction($rss,$siteId);
 			}
-			$items = $this->db_manager->Rss->fetchAllEntry($siteId);
-		foreach ($items as $item =>$value ) {
+
+			$items = $this->db_manager->Rss->fetchAllEntryId($siteId);
+			foreach ($items as $item =>$value ) {
 				$entryId = $value['id'];
-				$this->db_manager->Rss->insertRssList($siteId,$user['id'],$entryId);
+				$this->db_manager->Rss->insertRssList($siteId,$userId,$entryId);
 			}
 
 		return $this->redirect('/rss');
@@ -98,14 +100,7 @@ class RssController extends Controller
 		foreach ($items as $item) {
 			$entries[] = $item;
 		}
-/*
-		foreach ($sites as $site) {
-			$items= $this->db_manager->Rss->fetchAllEntry($site['site_id']);
-			foreach ($items as $item){
-				$entries[] = $item;
-			}
-		}
-*/
+
 		usort($entries, create_function('$a,$b','return(strtotime($a[\'created_at\']) < strtotime($b[\'created_at\']));'));
 
 		$siteTitles = array();
@@ -218,6 +213,21 @@ class RssController extends Controller
 		foreach ($siteTitleId as $key => $siteId) {
 			$this->db_manager->Rss->updateSequence($count,$siteId);
 			$count ++;
+		}
+	}
+
+	//記事に既読フラグを立つ
+	public function changeEntryStatusAction()
+	{
+		$user = $this->session->get('user');
+		$userId = $user['id'];
+		$entryId = '41';
+		$status = 'read';
+		$result = $this->db_manager->Rss->updateEntryStatus($status,$userId,$entryId);
+		if (!$result) {
+			return $this->render(array(
+				'result'=>$result
+				),'test');
 		}
 	}
 
