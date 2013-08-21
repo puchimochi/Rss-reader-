@@ -38,30 +38,17 @@ class RssRepository extends DbRepository{
 	}
 
 	//sitelistテーブルにレコード追加
-	public function insertRssList($siteId,$userId){
-
+	public function insertRssList($siteId,$userId,$entryId)
+	{
 		$sql = "
-		 SELECT site_id FROM sitelist WHERE (user_id = :user_id) AND (site_id = :site_id)
-		";
-
-		$stmt = $this->fetchAll($sql, array(
-			':user_id' =>$userId,
-			':site_id' =>$siteId,
-			));
-
-		if (!$stmt) {
-			$sql = "
-			INSERT INTO sitelist(user_id,site_id) VALUES (:user_id,:site_id)
+			INSERT INTO sitelist(user_id,site_id,entry_id) VALUES (:user_id,:site_id,:entry_id)
 			";
 
-			$stmt = $this->execute($sql,array(
-				':user_id' => $userId,
-				':site_id' => $siteId,
-				));
-			return true;
-		}else{
-			return false;
-		}
+		$stmt = $this->execute($sql,array(
+			':user_id' => $userId,
+			':site_id' => $siteId,
+			':entry_id' =>$entryId
+			));
 	}
 
 	//siteテーブルにサイトタイトルを追加
@@ -102,7 +89,7 @@ class RssRepository extends DbRepository{
 	public function fetchAllRssId($userId)
 	{
 		$sql ="
-			SELECT site_id FROM sitelist WHERE user_id = :user_id ORDER BY seq ASC
+			SELECT DISTINCT site_id FROM sitelist WHERE user_id = :user_id ORDER BY seq ASC
 		";
 
 		return $this->fetchAll($sql,array(':user_id' => $userId));

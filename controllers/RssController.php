@@ -11,11 +11,14 @@ class RssController extends Controller
 		$blog = $this->showAllRss($user);
 		$entries = $blog['entries'];
 		$siteTitles = $blog['siteTitles'];
+		// $siteId = '32';
+		// $items = $this->db_manager->Rss->fetchAllEntry($siteId);
 
 		return $this->render(array(
 			'entries'	=> $entries,
 			'siteTitles'=> $siteTitles,
 			'_token'	=> $this->generateCsrfToken('rss/add'),
+			// 'items' => $items,
 			));
 	}
 
@@ -56,18 +59,17 @@ class RssController extends Controller
 		if (count($errors) === 0) {
 			$user = $this->session->get('user');
 			$result = $this->db_manager->Rss->insert($url);
-
+			$siteId =$result['site_id'];
 			if (!$result['isExisted']) {
-				$this->updateSiteAction($rss,$result['site_id']);
+				$this->updateSiteAction($rss,$siteId);
+			}
+			$items = $this->db_manager->Rss->fetchAllEntry($siteId);
+		foreach ($items as $item =>$value ) {
+				$entryId = $value['id'];
+				$this->db_manager->Rss->insertRssList($siteId,$user['id'],$entryId);
 			}
 
-			$result = $this->db_manager->Rss->insertRssList($result['site_id'],$user['id']);
-			if (!$result) {
-				return $this->redirect('/rss');
-			}
-
-			return $this->redirect('/rss');
-
+		return $this->redirect('/rss');
 		}
 
 		$user = $this->session->get('user');
