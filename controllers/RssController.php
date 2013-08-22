@@ -160,7 +160,8 @@ class RssController extends Controller
 				}
 
 			if (preg_match('/<img(?:.*?)src=[\"\']([^>]*?)\.(jpg|JPG)[\"\'](?:.*?)>/e' , $content, $image)){
-				$img = ''.$image[1].'.jpg';}
+				$img = ''.$image[1].'.jpg';
+			}
 
 			$entryArr[] =array(
 				'site_id' => $siteId,
@@ -194,14 +195,17 @@ class RssController extends Controller
 
 		$entries = $this->db_manager->Rss->fetchEntryForOneRss($siteId);
 		if (!$entries) {
-			echo "false";
-		}
+			$msg = 'false';
+			echo  $msg;
+			exit();
+		}else{
 
 		$result =json_encode($entries);
 		header("Content-Type: application/json; charset=utf-8");
 		echo $result;
 		ob_end_flush();
 		exit();
+		}
 	}
 
 	//JqueryUIで並び替え、データーベースに順番を保存
@@ -221,13 +225,16 @@ class RssController extends Controller
 	{
 		$user = $this->session->get('user');
 		$userId = $user['id'];
-		$entryId = '41';
+		$entryId = $this->request->getPost('entry_id');
 		$status = 'read';
 		$result = $this->db_manager->Rss->updateEntryStatus($status,$userId,$entryId);
+
 		if (!$result) {
 			return $this->render(array(
 				'result'=>$result
 				),'test');
+		}else{
+			return $this->redirect('/rss');
 		}
 	}
 

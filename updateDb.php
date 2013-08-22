@@ -61,38 +61,40 @@ foreach ($sites as $site) {
 					$stmt->bindValue(':link',$entry['link'],PDO::PARAM_STR);
 					$stmt->bindValue(':content',$entry['content'],PDO::PARAM_STR);
 					$stmt->bindValue(':created_at',$entry['date'],PDO::PARAM_STR);
-					$stmt->execute();
-
 					$result = $stmt->execute();
-
-					if (!$result) {
-					echo "watch!";
-					}
-
 					$entryId =$con->lastInsertId();
-					$sql = "
-						SELECT user_id,site_id FROM sitelist WHERE site_id = :site_id
-					";
-					$stmt = $con->prepare($sql);
-					$stmt->bindValue(':site_id',$siteId,PDO::PARAM_STR);
-					$stmt->execute();
-					$results = $stmt->fetch(PDO::FETCH_ASSOC);
-					$userId = $results['user_id'];
-					$sql = "INSERT INTO sitelist(user_id,site_id,entry_id) VALUES (:user_id,:site_id,:entry_id)
-					";
-					$stmt->bindValue(':site_id',$siteId,PDO::PARAM_STR);
-					$stmt->bindValue(':user_id',$userId,PDO::PARAM_STR);
-					$stmt->bindValue(':entry_id',$entryId,PDO::PARAM_STR);
-					$stmt->execute();
-
-					if (!$results) {
-						echo"wrong";
+					if (!$result) {
+						echo "watch!";
+					}elseif (!isset($entryId)) {
+						echo "wrong!!";
+					}else{
+						$sql = "SELECT DISTINCT user_id FROM sitelist WHERE site_id = :site_id GROUP BY site_id ,user_id";
+						$stmt = $con->prepare($sql);
+						$stmt->bindValue(':site_id',$siteId,PDO::PARAM_STR);
+						$stmt->execute();
+						$results = $stmt->fetch(PDO::FETCH_ASSOC);
+						if (!$result) {
+							echo "STOP!";
+						}else{
+							$userId = $results['user_id'];
+							if (!isset($userId)) {
+								echo"no user exit";
+							}else{
+								$sql = "INSERT INTO sitelist(user_id,site_id,entry_id) VALUES (:user_id,:site_id,:entry_id)";
+								$stmt = $con->prepare($sql);
+								$stmt->bindValue(':user_id',$userId,PDO::PARAM_STR);
+								$stmt->bindValue(':site_id',$siteId,PDO::PARAM_STR);
+								$stmt->bindValue(':entry_id',$entryId,PDO::PARAM_STR);
+								$result = $stmt->execute();
+								if (!$result) {
+									echo "WRONG!";
+								}
+							}
+						}
 					}
-
 				}
 			}else{
 				echo "Empty!";
-
 			}
 		}
 	}

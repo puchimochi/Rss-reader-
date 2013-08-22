@@ -35,14 +35,19 @@ $(function () {
 			//dataType:'json',
 			success:function(data)
 			{
-				$('#content').html('<div class="accordion" id="accordion2"><div class="accordion-group" id="contentfeed"></div></div>');
+				if (data == 'false') {
+					$('#content').html('<h3>未読記事がありません。</h3>');
+				} else{
+
+				$('#content').html('<div ><div></div></div>');
 				var count = 1;
 				$.each(data, function(i,value){
-					$('#content').prepend('<div class="accordion" id="accordion2"><div class="accordion-group" id="contentfeed"><div class="accordion-heading"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse'+count+'">title:'+data[i].title+'</a></div><div id="collapse'+count+'" class="accordion-body collapse in"><div class="accordion-inner">投稿日時：'+ data[i].created_at +'<br>'+data[i].content+'</div></div>');
+					$('#content').append('<table class="table table-bordered"><tr><th>title:<a href='+data[i].link+'>'+data[i].title+'</a></th></tr><tr><th>投稿日時：'+data[i].created_at +'<form action= "http://localhost:1212/rss/change" method = "post"><input type="hidden" name="entry_id" value="'+data[i].id +'" id="readflag"><input type="submit" id="addbtn" value="既読"></form><br>'+data[i].content+'</th></tr></table>');
 					count ++;
 				});
 
 				console.log(data);
+			}
 			},
 			error: function(xhr, textStatus, errorThrown){
 				console.log(arguments);
@@ -58,4 +63,15 @@ $(function () {
 				);
 		}
 	});
+/*
+	// 記事に既読フラグを立つ
+	$('#readflag').click(function(){
+		var entryId = $(this).data('id');
+		$.ajax({
+			type:"POST",
+			url:"/rss/change",
+			data:{entry_id:entryId}
+		});
+		// $.post('/rss/change',{entry_id:entryId});
+	});*/
 });

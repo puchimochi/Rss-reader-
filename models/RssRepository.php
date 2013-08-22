@@ -124,14 +124,26 @@ class RssRepository extends DbRepository{
 	// 個別のサイト記事をとる
 	public function fetchEntryForOneRss($siteId,$status = 'unread')
 	{
-		$sql = "
-			SELECT * FROM entry WHERE id =ANY(SELECT entry_id FROM sitelist WHERE site_id = :site_id AND status = :status) ORDER BY created_at ASC
+		$sql="
+			SELECT entry_id FROM sitelist WHERE site_id = :site_id AND status = :status
 		";
+		$stmt = $this->fetch($sql,array(
+			':status' => $status,
+			':site_id'=> $siteId
+			));
+
+		if ($stmt) {
+			$sql = "
+				SELECT * FROM entry WHERE id = ANY(SELECT entry_id FROM sitelist WHERE site_id = :site_id AND status = :status) ORDER BY created_at DESC
+			";
 
 		return $this->fetchAll($sql,array(
 			':status' => $status,
 			':site_id'=> $siteId
 			));
+		}else{
+			return false;
+		}
 	}
 
 	//siteDBから各RSSサイトタイトルを取り出す
