@@ -27,7 +27,7 @@
 		<div class="col-lg-3 col-lg-pull-9">
 			<div id="addcategory">
 				<form action="<?php echo $base_url;?>/rss/addCategory" method="post">
-					<input class="span4"  type = "text" name="category" size="100" id="category">
+					<input class="span4"  type = "text" name="category" size="100" >
 					<p><input type="submit" id="addbtn" value="追加"></p>
 				</form>
 			</div>
