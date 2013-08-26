@@ -24,7 +24,7 @@ $(function () {
 		}
 	});
 	//個別に記事を表示
-	$(document).on('click','.active',function(){
+	$(document).on('click','.lists',function(){
 		var site_id = $(this).data('id');
 		//alert(site_id);
 
@@ -56,6 +56,40 @@ $(function () {
 			}
 		});
 	});
+
+	$(document).on('click','#category',function(){
+		var category_name = $(this).data('id');
+
+		$.ajax({
+			type:"POST",
+			url:"/rss/show",
+			data:{category_name:category_name},
+			//dataType:'json',
+			success:function(data)
+			{
+				if (data == 'false') {
+					$('#content').html('<h3>未読記事がありません。</h3>');
+				} else if(data == 'haha' ){
+					$('#content').html('注意');
+				}else{
+
+				$('#content').html('<div ><div></div></div>');
+				var count = 1;
+				$.each(data, function(i,value){
+					$('#content').append('<table class="table table-bordered"><tr><th>title:<a href='+data[i].link+'>'+data[i].title+'</a></th></tr><tr><th>投稿日時：'+data[i].created_at +'<form action= "http://localhost:1212/rss/change" method = "post"><input type="hidden" name="entry_id" value="'+data[i].id +'" id="readflag"><input type="submit" id="addbtn" value="既読"></form><br>'+data[i].content+'</th></tr></table>');
+					count ++;
+				});
+
+				console.log(data);
+			}
+			},
+			error: function(xhr, textStatus, errorThrown){
+				console.log(arguments);
+				alert('Error! ' + textStatus + ' ' + errorThrown);
+			}
+		});
+	});
+/*
 	//JqueryUIで並び替え、データーベースに順番を保存
 	$('#lists').sortable({
 		update:function(){
@@ -63,6 +97,8 @@ $(function () {
 				);
 		}
 	});
+
+
 /*
 	// 記事に既読フラグを立つ
 	$('#readflag').click(function(){

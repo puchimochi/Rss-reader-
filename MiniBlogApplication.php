@@ -39,6 +39,10 @@ class MiniBlogApplication extends Application{
 				=>array('controller' => 'rss' ,'action' => 'updateList'),
 			'/rss/change'
 				=>array('controller' => 'rss' ,'action' => 'changeEntryStatus'),
+			'/rss/addCategory'
+				=>array('controller' => 'rss' ,'action' => 'addCategory'),
+			'/rss/show'
+				=>array('controller' => 'rss' ,'action' => 'show'),
 			/*'/rss/:siteid'
 				=>array('controller' => 'rss' ,'action' => 'showForOneRss'),*/
 

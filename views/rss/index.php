@@ -25,6 +25,44 @@
 		<?php endif;?>
 		</div>
 		<div class="col-lg-3 col-lg-pull-9">
+			<div id="addcategory">
+				<form action="<?php echo $base_url;?>/rss/addCategory" method="post">
+					<input class="span4"  type = "text" name="category" size="100" id="category">
+					<p><input type="submit" id="addbtn" value="追加"></p>
+				</form>
+			</div>
+		<hr>
+			<div class="well sidebar-nav">
+				<ul class="nav nav-list"　>
+					<li class="nav-header"><a href="<?php echo $base_url;?>/rss">RSSホーム</a></li>
+				<?php foreach($categories as $category => $sites):?>
+				<?php if($category !== 'uncategorized'):?>
+					<li id="category" class="active" data-id="<?php echo $this->escape($category);?>"><strong><?php echo $this->escape($category);?></strong></li>
+						<ul>
+							<?php foreach($sites as $key =>$site):?>
+							<li class= "active lists" id = "siteId_<?php echo $this->escape($site['site_id']);?>" data-id="<?php echo $this->escape($site['site_id']);?>">
+								<a id = "blog"><?php echo $this->escape(mb_strimwidth($site['site_title'], 0, 35,"..."));?></a>
+								<span class="delete">X</span>
+							</li>
+						<?php endforeach;?>
+						</ul>
+					<?php else:?>
+					<ul>
+						<br>
+							<?php foreach($sites as $key =>$site):?>
+							<li class= "active lists" id = "siteId_<?php echo $this->escape($site['site_id']);?>" data-id="<?php echo $this->escape($site['site_id']);?>">
+								<a id = "blog"><?php echo $this->escape(mb_strimwidth($site['site_title'], 0, 35,"..."));?></a>
+								<span class="delete">X</span>
+							</li>
+						<?php endforeach;?>
+						</ul>
+					<?php endif;?>
+				<?php endforeach;?>
+				</ul>
+			</div>
+			<hr>
+			</div>
+<!--
 			<div class="well sidebar-nav">
 			<ul id="lists" class="nav nav-list"　>
 				<li class="nav-header"><a href="<?php echo $base_url?>/rss">RSSホーム</a></li>
@@ -33,12 +71,12 @@
 					<span class="delete">X</span>
 				</li>
 				<?php endforeach;?>
+
 			</ul>
 			</div><!--/.well -->
 		</div>
 	</div>
 </div>
-
 
 
 

@@ -11,6 +11,8 @@ class RssController extends Controller
 		$blog = $this->showAllRss($user);
 		$entries = $blog['entries'];
 		$siteTitles = $blog['siteTitles'];
+		// $categories = $this->db_manager->Category->getCategoryList($user['id']);
+		$categories = $this->getRssInfo();
 		// $siteId = '32';
 		// $items = $this->db_manager->Rss->fetchAllEntry($siteId);
 
@@ -18,6 +20,8 @@ class RssController extends Controller
 			'entries'	=> $entries,
 			'siteTitles'=> $siteTitles,
 			'_token'	=> $this->generateCsrfToken('rss/add'),
+			'categories'	=>$categories,
+			//'category_infos' =>$category_info,
 			// 'items' => $items,
 			));
 	}
@@ -65,7 +69,8 @@ class RssController extends Controller
 				$this->updateSiteAction($rss,$siteId);
 			}
 
-			$items = $this->db_manager->Rss->fetchAllEntryId($siteId);
+			$items = $this->db_manager->Entry->fetchAllEntryId($siteId);
+			$this->db_manager->Category->setCategory($siteId,$userId);
 			foreach ($items as $item =>$value ) {
 				$entryId = $value['id'];
 				$this->db_manager->Rss->insertRssList($siteId,$userId,$entryId);
@@ -85,7 +90,6 @@ class RssController extends Controller
 			'entries'	=> $entries,
 			'siteTitles'	=>$siteTitles,
 			),'index');
-
 	}
 
 	/*ユーザーのRSSフィードを表示
@@ -95,8 +99,8 @@ class RssController extends Controller
 	{
 		$entries = array();
 		$userId = $user['id'];
-		$siteIds = $this->db_manager->Rss->fetchAllRssId($userId);
-		$items = $this->db_manager->Rss->fetchAllEntry($userId);
+		$siteIds = $this->db_manager->Rss->showRssList($userId);
+		$items = $this->db_manager->Entry->fetchAllEntry($userId);
 		foreach ($items as $item) {
 			$entries[] = $item;
 		}
@@ -104,7 +108,6 @@ class RssController extends Controller
 		usort($entries, create_function('$a,$b','return(strtotime($a[\'created_at\']) < strtotime($b[\'created_at\']));'));
 
 		$siteTitles = array();
-		$siteIds = $this->db_manager->Rss->fetchAllRssId($userId);
 		foreach ($siteIds as $site =>$value) {
 			$items = $this->db_manager->Rss->fetchAllTitle($value['site_id']);
 			foreach ($items as $item) {
@@ -134,6 +137,12 @@ class RssController extends Controller
 		if (!$result) {
 			$this->redirect('/');
 		}
+
+		$result=$this->db_manager->Category->deleteCategory($user['id'],$siteId);
+		if (!$result) {
+			$this->redirect('/rss');
+		}
+
 		//return $this->redirect('/rss');
 		$msg = "success";
 		echo "success";
@@ -181,7 +190,7 @@ class RssController extends Controller
 				$content = $entry['content'];
 				$photo  =$entry['photo'];
 				$date = $entry['date'];
-				$this->db_manager->Rss->insertEntry($siteId,$title,$link,$content,$photo,$date);
+				$this->db_manager->Entry->insertEntry($siteId,$title,$link,$content,$photo,$date);
 			}
 		}
 	}
@@ -193,18 +202,17 @@ class RssController extends Controller
 		$siteId = $this->request->getPost('site_id');
 		// $userId = $user['id'];
 
-		$entries = $this->db_manager->Rss->fetchEntryForOneRss($siteId);
+		$entries = $this->db_manager->Entry->fetchEntryForOneRss($siteId);
 		if (!$entries) {
 			$msg = 'false';
 			echo  $msg;
 			exit();
 		}else{
-
-		$result =json_encode($entries);
-		header("Content-Type: application/json; charset=utf-8");
-		echo $result;
-		ob_end_flush();
-		exit();
+			$result =json_encode($entries);
+			header("Content-Type: application/json; charset=utf-8");
+			echo $result;
+			ob_end_flush();
+			exit();
 		}
 	}
 
@@ -227,7 +235,7 @@ class RssController extends Controller
 		$userId = $user['id'];
 		$entryId = $this->request->getPost('entry_id');
 		$status = 'read';
-		$result = $this->db_manager->Rss->updateEntryStatus($status,$userId,$entryId);
+		$result = $this->db_manager->Entry->updateEntryStatus($status,$userId,$entryId);
 
 		if (!$result) {
 			return $this->render(array(
@@ -237,6 +245,108 @@ class RssController extends Controller
 			return $this->redirect('/rss');
 		}
 	}
+
+	// カテゴリ相関メソッド
+	/*カテゴリを作る
+	@param $user
+	*/
+	public function addCategoryAction()
+	{
+		# code...
+		$user = $this->session->get('user');
+		$userId = $user['id'];
+		$categoryName = $this->request->getPost('category');
+
+		if (!$this->request->isPost()) {
+			$this->forward404();
+		}
+		/**/
+		//$errors=array();
+		if (! strlen($categoryName)) {
+			return $this->redirect('/account');
+		}
+
+		$result = $this->db_manager->Category->addCategory($userId,$categoryName);
+		if (!$result) {
+			$this->redirect('/');
+		}
+		$this->redirect('/rss');
+	}
+
+	public function getRssInfo()
+	{
+		$user = $this->session->get('user');
+		$userId = $user['id'];
+		$sites = $this->db_manager->Category->getRssInfo($userId);
+		if (count($sites)===0) {
+			$categories = array();
+			}
+		// $categories = $this->db_manager->Category->getCategoryList($userId);
+		foreach ($sites as $key => $site) {
+			if (isset($site['site_id'])) {
+				$siteTitle = $this->db_manager->Rss->fetchTitle($site['site_id']);
+				$category_id = $site['category_id'];
+				$categories[$site['category_name']][] =array(
+							'site_id' => $site['site_id'],
+							'site_title' => $siteTitle['site_title'],
+						);
+			}
+		}
+
+		if (count($categories)=== 0) {
+			$categories = array();
+		}
+		return $categories;
+	}
+
+	public function showAction()
+	{
+		ob_start();
+		$user = $this->session->get('user');
+		$userId = $user['id'];
+		$category_name = $this->request->getPost('category_name');
+		$sites= $this->db_manager->Category->getRssId($userId,$category_name);
+		foreach ($sites as $site) {
+				$siteId = $site['site_id'];
+				if (!isset($siteId)) {
+					$msg = 'bubu';
+					echo  $msg;
+					exit();
+				}
+				$items = $this->db_manager->Entry->fetchEntryForOneRss($siteId);
+				if (!$items) {
+					$msg = 'wrong';
+					echo  $msg;
+					exit();
+					}
+				foreach ($items as $item) {
+					# code...
+					$entries[]=array(
+					'id'=>$item['id'],
+					'site_id'=>$item['site_id'],
+					'title'=>$item['title'],
+					'link'=>$item['link'],
+					'content'=>$item['content'],
+					'photo'=>$item['photo'],
+					'created_at'=>$item['created_at']
+					);
+				}
+			}
+
+
+		if (count($entries) > 0) {
+				usort($entries, create_function('$a,$b','return(strtotime($a[\'created_at\']) < strtotime($b[\'created_at\']));'));
+				$result =json_encode($entries);
+				header("Content-Type: application/json; charset=utf-8");
+				echo $result;
+				ob_end_flush();
+				exit();
+			}else{
+				$msg = 'false';
+				echo  $msg;
+				exit();
+			}
+		}
 
 }
 /*
