@@ -40,10 +40,12 @@
 					<li id="category" class="active" data-id="<?php echo $this->escape($category);?>"><strong><?php echo $this->escape($category);?></strong></li>
 						<ul>
 							<?php foreach($sites as $key =>$site):?>
+							<?php if(($site['site_id']) !== 'null'):?>
 							<li class= "active lists" id = "siteId_<?php echo $this->escape($site['site_id']);?>" data-id="<?php echo $this->escape($site['site_id']);?>">
 								<a id = "blog"><?php echo $this->escape(mb_strimwidth($site['site_title'], 0, 35,"..."));?></a>
 								<span class="delete">X</span>
 							</li>
+						<?php endif;?>
 						<?php endforeach;?>
 						</ul>
 					<?php else:?>

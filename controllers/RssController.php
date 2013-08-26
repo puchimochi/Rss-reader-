@@ -291,6 +291,10 @@ class RssController extends Controller
 							'site_id' => $site['site_id'],
 							'site_title' => $siteTitle['site_title'],
 						);
+			}else{
+				$categories[$site['category_name']][]=array(
+					'site_id'=>'null',
+					'site_title'=>'null');
 			}
 		}
 
