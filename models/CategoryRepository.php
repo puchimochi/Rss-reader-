@@ -31,7 +31,7 @@ class CategoryRepository extends DbRepository
 	//カテゴリ名を取り出す
 	public function getCategoryList($userId)
 	{
-		$sql = "SELECT category_name,category_id FROM category WHERE user_id = :user_id GROUP BY category_name";
+		$sql = "SELECT category_name FROM category WHERE user_id = :user_id GROUP BY category_name";
 		return $this->fetchAll($sql, array(
 			':user_id' => $userId
 			));
@@ -39,7 +39,7 @@ class CategoryRepository extends DbRepository
 
 	public function getRssInfo($userId)
 	{
-		$sql=" SELECT site_id ,category_name ,category_id FROM category WHERE user_id = :user_id ORDER BY category_name
+		$sql=" SELECT site_id ,category_name  FROM category WHERE user_id = :user_id ORDER BY category_name
 		";
 		return $this->fetchAll($sql, array(
 			// ':category_name' => $categoryName,

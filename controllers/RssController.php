@@ -83,12 +83,14 @@ class RssController extends Controller
 		$blog = $this->showAllRss($user);
 		$entries = $blog['entries'];
 		$siteTitles = $blog['siteTitles'];
+		$categories = $this->getRssInfo();
 
 		return $this->render(array(
 			'errors'	=> $errors,
 			'_token'	=> $this->generateCsrfToken('rss/add'),
 			'entries'	=> $entries,
 			'siteTitles'	=>$siteTitles,
+			'categories'	=>$categories
 			),'index');
 	}
 
@@ -285,7 +287,6 @@ class RssController extends Controller
 		foreach ($sites as $key => $site) {
 			if (isset($site['site_id'])) {
 				$siteTitle = $this->db_manager->Rss->fetchTitle($site['site_id']);
-				$category_id = $site['category_id'];
 				$categories[$site['category_name']][] =array(
 							'site_id' => $site['site_id'],
 							'site_title' => $siteTitle['site_title'],
