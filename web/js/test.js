@@ -69,8 +69,8 @@ $(function () {
 			{
 				if (data == 'false') {
 					$('#content').html('<h3>未読記事がありません。</h3>');
-				} else if(data == 'haha' ){
-					$('#content').html('注意');
+				} else if(data == 'empty' ){
+					$('#content').html('このカテゴリはemptyです。');
 				}else{
 
 				$('#content').html('<div ><div></div></div>');

@@ -311,6 +311,11 @@ class RssController extends Controller
 		$userId = $user['id'];
 		$category_name = $this->request->getPost('category_name');
 		$sites= $this->db_manager->Category->getRssId($userId,$category_name);
+		if (!$sites) {
+			$msg = 'empty';
+			echo  $msg;
+			exit();
+		}else{
 		foreach ($sites as $site) {
 				$siteId = $site['site_id'];
 				if (!isset($siteId)) {
@@ -339,20 +344,20 @@ class RssController extends Controller
 			}
 
 
-		if (count($entries) > 0) {
-				usort($entries, create_function('$a,$b','return(strtotime($a[\'created_at\']) < strtotime($b[\'created_at\']));'));
-				$result =json_encode($entries);
-				header("Content-Type: application/json; charset=utf-8");
-				echo $result;
-				ob_end_flush();
-				exit();
-			}else{
-				$msg = 'false';
-				echo  $msg;
-				exit();
-			}
+			if (count($entries) > 0) {
+					usort($entries, create_function('$a,$b','return(strtotime($a[\'created_at\']) < strtotime($b[\'created_at\']));'));
+					$result =json_encode($entries);
+					header("Content-Type: application/json; charset=utf-8");
+					echo $result;
+					ob_end_flush();
+					exit();
+				}else{
+					$msg = 'false';
+					echo  $msg;
+					exit();
+				}
 		}
-
+			}
 }
 /*
 	//URLごとにデーターを取り出す
