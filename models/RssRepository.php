@@ -73,7 +73,7 @@ class RssRepository extends DbRepository{
 	public function showRssList($userId)
 	{
 		$sql ="
-			SELECT DISTINCT site_id FROM sitelist WHERE user_id = :user_id ORDER BY seq ASC
+			SELECT DISTINCT site_id FROM sitelist WHERE user_id = :user_id
 		";
 
 		return $this->fetchAll($sql,array(':user_id' => $userId));
