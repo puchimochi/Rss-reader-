@@ -35,6 +35,12 @@
 			<div class="well sidebar-nav">
 				<ul class="nav nav-list"　>
 					<li class="nav-header"><a href="<?php echo $base_url;?>/rss">RSSホーム</a></li>
+
+					<div>
+					<?php foreach($categories as $category => $sites):?>
+						<?php $options .="<option value='".$category."'>". $category."</option>";?>
+					<?php endforeach;?>
+					</div>
 				<?php foreach($categories as $category => $sites):?>
 				<?php if($category !== 'uncategorized'):?>
 					<li id="category" class="active" data-id="<?php echo $this->escape($category);?>"><strong><?php echo $this->escape($category);?></strong></li>
@@ -44,6 +50,13 @@
 							<li class= "active lists" id = "siteId_<?php echo $this->escape($site['site_id']);?>" data-id="<?php echo $this->escape($site['site_id']);?>">
 								<a id = "blog"><?php echo $this->escape(mb_strimwidth($site['site_title'], 0, 35,"..."));?></a>
 								<span class="delete">X</span>
+								<div name="categorize">
+								<form method="POST" action ="<?php echo $base_url;?>/rss/categorize">
+									<input type="hidden" name="site_id" value="<?php echo $this->escape($site['site_id']);?>">
+									<select name="test"><?php echo $options?></select>
+									<input type="submit" value="送信">
+								</form>
+								</div>
 							</li>
 						<?php endif;?>
 						<?php endforeach;?>
@@ -52,10 +65,19 @@
 					<ul>
 						<br>
 							<?php foreach($sites as $key =>$site):?>
+							<?php if($site['site_id'] !=='null'):?>
 							<li class= "active lists" id = "siteId_<?php echo $this->escape($site['site_id']);?>" data-id="<?php echo $this->escape($site['site_id']);?>">
 								<a id = "blog"><?php echo $this->escape(mb_strimwidth($site['site_title'], 0, 35,"..."));?></a>
 								<span class="delete">X</span>
+								<div name="categorize">
+								<form method="POST" action ="<?php echo $base_url;?>/rss/categorize">
+									<input type="hidden" name="site_id" value="<?php echo $this->escape($site['site_id']);?>">
+									<select name="test"><?php echo $options?></select>
+									<input type="submit" value="送信">
+								</form>
+								</div>
 							</li>
+						<?php endif;?>
 						<?php endforeach;?>
 						</ul>
 					<?php endif;?>

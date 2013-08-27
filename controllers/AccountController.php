@@ -48,6 +48,7 @@ class AccountController extends Controller{
 			$this->session->setAuthenticated(true);
 
 			$user = $this->db_manager->get('User')->fetchByUserName($user_name);
+			$this->db_manager->Category->addCategory($user['id']);
 			$this->session->set('user',$user);
 
 			return $this->redirect('/');
@@ -171,9 +172,6 @@ class AccountController extends Controller{
 		}
 
 		return $this->redirect('/account');
-
-
-
 	}
 
 }

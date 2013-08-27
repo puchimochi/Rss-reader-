@@ -1,13 +1,14 @@
 <table class="table table-bordered">
   <tr>
-    <th> title:<a href="<?php echo $this->escape($entry['link']);?>"><?php echo $this->escape($entry['title']);?></a></th>
+    <th> title:<a href="<?php echo $this->escape($entry['link']);?>" ><?php echo $this->escape($entry['title']);?></a></th>
   </tr>
   <tr>
     <th>
       投稿日時：<?php echo $this->escape($entry['created_at']);?>
         <form action= "<?php echo $base_url;?>/rss/change" method = "post">
         <input type="hidden" name="entry_id" value="<?php echo $this->escape($entry['id']);?>" id="readflag">
-        <input type="submit" id="addbtn" value="既読">
+        <input type="submit" id="addbtn" value="既読"><br>
+        <a href="<?php echo $this->escape($entry['link']);?>" target="_blank">続きは...</a>
         </form>
         <?php //echo $entry['content'];?>
     </th>

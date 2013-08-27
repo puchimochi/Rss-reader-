@@ -3,7 +3,7 @@
 class CategoryRepository extends DbRepository
 {
 	//category更新
-	public function setCategory($siteId,$userId)
+	public function setRssCategory($siteId,$userId)
 	{
 
 			$sql = "
@@ -16,7 +16,7 @@ class CategoryRepository extends DbRepository
 	}
 
 	//カテゴリを追加
-	public function addCategory($userId,$categoryName)
+	public function addCategory($userId,$categoryName="uncategorized")
 	{
 		# code...
 		$sql = "
@@ -63,6 +63,18 @@ class CategoryRepository extends DbRepository
 		$sql = " DELETE FROM category WHERE user_id = :user_id AND site_id = :site_id
 		";
 		$stmt = $this->execute($sql, array(
+			':user_id'=>$userId,
+			':site_id'=>$siteId,
+			));
+		return $stmt;
+	}
+
+	public function changeCategory($userId,$siteId,$categoryName)
+	{
+		$sql=" UPDATE category SET category_name = :category_name WHERE user_id = :user_id AND site_id = :site_id
+		";
+		$stmt = $this->execute($sql, array(
+			':category_name'=>$categoryName,
 			':user_id'=>$userId,
 			':site_id'=>$siteId,
 			));

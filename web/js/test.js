@@ -24,10 +24,10 @@ $(function () {
 		}
 	});
 	//個別に記事を表示
+
 	$(document).on('click','.lists',function(){
 		var site_id = $(this).data('id');
 		//alert(site_id);
-
 		$.ajax({
 			type:"POST",
 			url:"/rss/showlist",
@@ -39,10 +39,10 @@ $(function () {
 					$('#content').html('<h3>未読記事がありません。</h3>');
 				} else{
 
-				$('#content').html('<div ><div></div></div>');
+				$('#content').html('<div></div>');
 				var count = 1;
 				$.each(data, function(i,value){
-					$('#content').append('<table class="table table-bordered"><tr><th>title:<a href='+data[i].link+'>'+data[i].title+'</a></th></tr><tr><th>投稿日時：'+data[i].created_at +'<form action= "http://localhost:1212/rss/change" method = "post"><input type="hidden" name="entry_id" value="'+data[i].id +'" id="readflag"><input type="submit" id="addbtn" value="既読"></form><br>'+data[i].content+'</th></tr></table>');
+					$('#content').append('<table class="table table-bordered"><tr><th>title:<a href="'+data[i].link+'" target="_blank">'+data[i].title+'</a></th></tr><tr><th>投稿日時：'+data[i].created_at +'<form action= "http://localhost:1212/rss/change" method = "post"><input type="hidden" name="entry_id" value="'+data[i].id +'" id="readflag"><input type="submit" id="addbtn" value="既読"></form><br>'+data[i].content+'<br>'+'<a href="'+data[i].link+'" target="_blank">続きは...</a></th></tr></table>');
 					count ++;
 				});
 
@@ -73,10 +73,10 @@ $(function () {
 					$('#content').html('このカテゴリはemptyです。');
 				}else{
 
-				$('#content').html('<div ><div></div></div>');
+				$('#content').html('<div><div>');
 				var count = 1;
 				$.each(data, function(i,value){
-					$('#content').append('<table class="table table-bordered"><tr><th>title:<a href='+data[i].link+'>'+data[i].title+'</a></th></tr><tr><th>投稿日時：'+data[i].created_at +'<form action= "http://localhost:1212/rss/change" method = "post"><input type="hidden" name="entry_id" value="'+data[i].id +'" id="readflag"><input type="submit" id="addbtn" value="既読"></form><br>'+data[i].content+'</th></tr></table>');
+					$('#content').append('<table class="table table-bordered"><tr><th>title:<a href="'+data[i].link+'" target="_blank">'+data[i].title+'</a></th></tr><tr><th>投稿日時：'+data[i].created_at +'<form action= "http://localhost:1212/rss/change" method = "post"><input type="hidden" name="entry_id" value="'+data[i].id +'" id="readflag"><input type="submit" id="addbtn" value="既読"></form><br>'+data[i].content+'<br>'+'<a href="'+data[i].link+'" target="_blank">続きは...</a></th></tr></table>');
 					count ++;
 				});
 

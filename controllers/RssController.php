@@ -70,7 +70,7 @@ class RssController extends Controller
 			}
 
 			$items = $this->db_manager->Entry->fetchAllEntryId($siteId);
-			$this->db_manager->Category->setCategory($siteId,$userId);
+			$this->db_manager->Category->setRssCategory($siteId,$userId);
 			foreach ($items as $item =>$value ) {
 				$entryId = $value['id'];
 				$this->db_manager->Rss->insertRssList($siteId,$userId,$entryId);
@@ -316,21 +316,20 @@ class RssController extends Controller
 			echo  $msg;
 			exit();
 		}else{
-		foreach ($sites as $site) {
-				$siteId = $site['site_id'];
-				if (!isset($siteId)) {
-					$msg = 'bubu';
-					echo  $msg;
-					exit();
-				}
-				$items = $this->db_manager->Entry->fetchEntryForOneRss($siteId);
+			foreach ($sites as $site) {
+			$siteId = $site['site_id'];
+			if (!isset($siteId)) {
+				$msg = 'bubu';
+				echo  $msg;
+				exit();
+			}
+			$items = $this->db_manager->Entry->fetchEntryForOneRss($siteId);
 				if (!$items) {
 					$msg = 'wrong';
 					echo  $msg;
 					exit();
-					}
+				}
 				foreach ($items as $item) {
-					# code...
 					$entries[]=array(
 					'id'=>$item['id'],
 					'site_id'=>$item['site_id'],
@@ -343,21 +342,45 @@ class RssController extends Controller
 				}
 			}
 
-
 			if (count($entries) > 0) {
-					usort($entries, create_function('$a,$b','return(strtotime($a[\'created_at\']) < strtotime($b[\'created_at\']));'));
-					$result =json_encode($entries);
-					header("Content-Type: application/json; charset=utf-8");
-					echo $result;
-					ob_end_flush();
-					exit();
-				}else{
-					$msg = 'false';
-					echo  $msg;
-					exit();
-				}
-		}
+				usort($entries, create_function('$a,$b','return(strtotime($a[\'created_at\']) < strtotime($b[\'created_at\']));'));
+				$result =json_encode($entries);
+				header("Content-Type: application/json; charset=utf-8");
+				echo $result;
+				ob_end_flush();
+				exit();
+			}else{
+				$msg = 'false';
+				echo  $msg;
+				exit();
 			}
+		}
+	}
+
+	public function changeCategoryAction()
+	{
+		$user = $this->session->get('user');
+		$userId = $user['id'];
+		if (!$this->request->isPost()) {
+			$this->forward404();
+		}
+		$siteId = $this->request->getPost('site_id');
+		if (!isset($siteId)) {
+			return $this->redirect('/');
+		}
+		$categoryName = $this->request->getPost('test');
+		if (!isset($categoryName)) {
+			return $this->redirect('/');
+		}
+		$result=$this->db_manager->Category->changeCategory($userId,$siteId,$categoryName);
+		if (!$result) {
+			return $this->redirect('/account');
+		}
+		return $this->redirect('/rss');
+	}
+
+
+
 }
 /*
 	//URLごとにデーターを取り出す
