@@ -7,8 +7,7 @@ class RssRepository extends DbRepository{
 		$now = new DateTime();
 		$isExisted = false;
 
-		$sql = " SELECT site_url FROM site WHERE site_url = :site_url
-		";
+		$sql = " SELECT site_url FROM site WHERE site_url = :site_url";
 		$stmt = $this->fetch($sql,array(':site_url' => $url));
 
 		if(!$stmt){

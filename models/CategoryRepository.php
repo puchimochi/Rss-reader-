@@ -5,7 +5,6 @@ class CategoryRepository extends DbRepository
 	//category更新
 	public function setRssCategory($siteId,$userId)
 	{
-
 			$sql = "
 			INSERT INTO category(user_id,site_id) VALUES (:user_id,:site_id)
 			";
@@ -18,7 +17,6 @@ class CategoryRepository extends DbRepository
 	//カテゴリを追加
 	public function addCategory($userId,$categoryName="uncategorized")
 	{
-		# code...
 		$sql = "
 			INSERT INTO category(user_id,category_name) VALUES (:user_id,:category_name)
 			";
@@ -27,22 +25,12 @@ class CategoryRepository extends DbRepository
 			':category_name' => $categoryName,
 			));
 	}
-
-	//カテゴリ名を取り出す
-	public function getCategoryList($userId)
-	{
-		$sql = "SELECT category_name FROM category WHERE user_id = :user_id GROUP BY category_name";
-		return $this->fetchAll($sql, array(
-			':user_id' => $userId
-			));
-	}
-
+	//ユーザーが持つカテゴリ情報を取得
 	public function getRssInfo($userId)
 	{
 		$sql=" SELECT site_id ,category_name  FROM category WHERE user_id = :user_id ORDER BY category_name
 		";
 		return $this->fetchAll($sql, array(
-			// ':category_name' => $categoryName,
 			':user_id' => $userId
 			));
 	}
@@ -58,7 +46,7 @@ class CategoryRepository extends DbRepository
 			));
 	}
 
-	public function deleteCategory($userId,$siteId)
+	public function deleteFromCategory($userId,$siteId)
 	{
 		$sql = " DELETE FROM category WHERE user_id = :user_id AND site_id = :site_id
 		";

@@ -11,24 +11,17 @@ class RssController extends Controller
 		$blog = $this->showAllRss($user);
 		$entries = $blog['entries'];
 		$siteTitles = $blog['siteTitles'];
-		// $categories = $this->db_manager->Category->getCategoryList($user['id']);
 		$categories = $this->getRssInfo();
-		// $siteId = '32';
-		// $items = $this->db_manager->Rss->fetchAllEntry($siteId);
 
 		return $this->render(array(
 			'entries'	=> $entries,
 			'siteTitles'=> $siteTitles,
 			'_token'	=> $this->generateCsrfToken('rss/add'),
 			'categories'	=>$categories,
-			//'category_infos' =>$category_info,
-			// 'items' => $items,
 			));
 	}
 
-	/**
-	*新サイトを追加する
-	*/
+	//	新サイトを追加する
 	public function addAction()
 	{
 		if (!$this->request->isPost()) {
@@ -43,11 +36,9 @@ class RssController extends Controller
 		$url = $this->request->getPost('url');
 		$errors = array();
 
-
 		if (! strlen($url)) {
 			$errors[] = 'URLを入力してください。';
 		}else{
-
 			$rss = @simplexml_load_file($url,'SimpleXMLElement', LIBXML_NOCDATA);
 			$header = get_headers($url);
 			if (!$rss) {
@@ -145,7 +136,6 @@ class RssController extends Controller
 			$this->redirect('/rss');
 		}
 
-		//return $this->redirect('/rss');
 		$msg = "success";
 		echo "success";
 	}
@@ -170,17 +160,18 @@ class RssController extends Controller
 					$content = $item->description;
 				}
 
-			if (preg_match('/<img(?:.*?)src=[\"\']([^>]*?)\.(jpg|JPG)[\"\'](?:.*?)>/e' , $content, $image)){
-				$img = ''.$image[1].'.jpg';
-			}
+				if (preg_match('/<img(?:.*?)src=[\"\']([^>]*?)\.(jpg|JPG)[\"\'](?:.*?)>/e' , $content, $image)){
+					$img = ''.$image[1].'.jpg';
+				}
 
-			$entryArr[] =array(
-				'site_id' => $siteId,
-				'title' => $item->title,
-				'link' => $item->link,
-				'content' => $content,
-				'photo' => $img,
-				'date' => $date);
+				$entryArr[] =array(
+					'site_id' => $siteId,
+					'title' => $item->title,
+					'link' => $item->link,
+					'content' => $content,
+					'photo' => $img,
+					'date' => $date
+					);
 			}
 
 			usort($entryArr, create_function('$a,$b','return(strtotime($a[\'date\']) > strtotime($b[\'date\']));'));
@@ -202,7 +193,6 @@ class RssController extends Controller
 	{
 		ob_start();
 		$siteId = $this->request->getPost('site_id');
-		// $userId = $user['id'];
 
 		$entries = $this->db_manager->Entry->fetchEntryForOneRss($siteId);
 		if (!$entries) {
@@ -217,7 +207,7 @@ class RssController extends Controller
 			exit();
 		}
 	}
-
+/*
 	//JqueryUIで並び替え、データーベースに順番を保存
 	public function updateListAction()
 	{
@@ -229,6 +219,7 @@ class RssController extends Controller
 			$count ++;
 		}
 	}
+*/
 
 	//記事に既読フラグを立つ
 	public function changeEntryStatusAction()
@@ -254,7 +245,6 @@ class RssController extends Controller
 	*/
 	public function addCategoryAction()
 	{
-		# code...
 		$user = $this->session->get('user');
 		$userId = $user['id'];
 		$categoryName = $this->request->getPost('category');
@@ -262,8 +252,7 @@ class RssController extends Controller
 		if (!$this->request->isPost()) {
 			$this->forward404();
 		}
-		/**/
-		//$errors=array();
+
 		if (! strlen($categoryName)) {
 			return $this->redirect('/account');
 		}
@@ -275,6 +264,7 @@ class RssController extends Controller
 		$this->redirect('/rss');
 	}
 
+//カテゴリ情報を取得
 	public function getRssInfo()
 	{
 		$user = $this->session->get('user');
@@ -283,7 +273,6 @@ class RssController extends Controller
 		if (count($sites)===0) {
 			$categories = array();
 			}
-		// $categories = $this->db_manager->Category->getCategoryList($userId);
 		foreach ($sites as $key => $site) {
 			if (isset($site['site_id'])) {
 				$siteTitle = $this->db_manager->Rss->fetchTitle($site['site_id']);
@@ -304,6 +293,7 @@ class RssController extends Controller
 		return $categories;
 	}
 
+//カテゴリ別に記事を表示
 	public function showAction()
 	{
 		ob_start();
@@ -357,6 +347,7 @@ class RssController extends Controller
 		}
 	}
 
+//RSSのカテゴリ名を変更
 	public function changeCategoryAction()
 	{
 		$user = $this->session->get('user');
@@ -378,9 +369,6 @@ class RssController extends Controller
 		}
 		return $this->redirect('/rss');
 	}
-
-
-
 }
 /*
 	//URLごとにデーターを取り出す
