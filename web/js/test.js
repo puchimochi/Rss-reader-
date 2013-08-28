@@ -12,19 +12,20 @@ $(function () {
 		}
 	});
 */
+
 	//RSSフィードを削除
 	$(document).on('click','.delete',function(){
 		if (confirm('Would U really want to delete it?')){
-			var site_id = $(this).parent().data('id');
-			//alert(site_id);
+			var site_id = $(this).parent().parent().parent().data('id');
+			alert(site_id);
 			$.post('/rss/delete',{site_id:site_id},function(rs){
-				$('#siteTitleId_'+site_id).fadeOut(100);
+				console.log(rs);
+				$('#siteId_'+site_id).fadeOut(100);
 				location.href="/rss";
 			});
 		}
 	});
 	//個別に記事を表示
-
 	$(document).on('click','.lists',function(){
 		var site_id = $(this).data('id');
 		//alert(site_id);
@@ -56,7 +57,7 @@ $(function () {
 			}
 		});
 	});
-
+//カテゴリ別に記事を表示
 	$(document).on('click','#category',function(){
 		var category_name = $(this).data('id');
 
@@ -89,6 +90,15 @@ $(function () {
 			}
 		});
 	});
+
+//
+
+	$("#menu li").hover(function() {
+
+		$(this).children('ul').show();
+	}, function() {
+		$(this).children('ul').hide();
+	});
 /*
 	//JqueryUIで並び替え、データーベースに順番を保存
 	$('#lists').sortable({
@@ -97,7 +107,6 @@ $(function () {
 				);
 		}
 	});
-
 
 /*
 	// 記事に既読フラグを立つ

@@ -128,12 +128,18 @@ class RssController extends Controller
 		$siteId = $this->request->getPost('site_id');
 		$result = $this->db_manager->Rss->deleteRssFromList($user['id'],$siteId);
 		if (!$result) {
-			$this->redirect('/');
+			// $this->redirect('/');
+			$msg="false";
+			echo $msg;
+			exit();
 		}
 
-		$result=$this->db_manager->Category->deleteCategory($user['id'],$siteId);
+		$result=$this->db_manager->Category->deleteFromCategory($user['id'],$siteId);
 		if (!$result) {
-			$this->redirect('/rss');
+			// $this->redirect('/rss');
+			$msg="false";
+			echo $msg;
+			exit();
 		}
 
 		$msg = "success";

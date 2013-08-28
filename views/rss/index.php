@@ -92,14 +92,19 @@
 								<?php if($site['site_id'] !=='null'):?>
 								<li class= "lists" id = "siteId_<?php echo $this->escape($site['site_id']);?>" data-id="<?php echo $this->escape($site['site_id']);?>">
 									<a id = "blog"><?php echo $this->escape(mb_strimwidth($site['site_title'], 0, 35,"..."));?></a>
-									<span class="delete">X</span>
-									<i class="icon-wrench"></i>
+									<!-- <span class="delete">X</span> -->
+									<div class="btn-group">
+									<i class="icon-wrench dropdown-toggle" data-toggle="dropdown" href="#"></i>
+									<ul class="dropdown-menu">
+										<li class="delete">delete</li>
+									</ul>
+									</div>
 
 
 									<div name="categorize">
 										<form method="POST" action ="<?php echo $base_url;?>/rss/categorize">
 											<input type="hidden" name="site_id" value="<?php echo $this->escape($site['site_id']);?>">
-											<select name="test"><?php echo $options?></select>
+											<select name="test" ><?php echo $options?></select>
 											<input type="submit" value="送信">
 										</form>
 									</div>
@@ -181,3 +186,10 @@
 						<button class="btn btn-primary">save</button>
 					</div>
 				</div><!-- Modal -->
+
+				<div class="btn-group">
+				<i class="icon-home  dropdown-toggle" data-toggle="dropdown" href="#"></i>
+				<ul class="dropdown-menu">
+    <!-- dropdown menu links -->
+				</ul>
+				</div>
