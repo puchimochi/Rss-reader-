@@ -353,27 +353,71 @@ class RssController extends Controller
 		}
 	}
 
-//RSSのカテゴリ名を変更
+//RSSのカテゴリを変更
 	public function changeCategoryAction()
 	{
 		$user = $this->session->get('user');
 		$userId = $user['id'];
 		if (!$this->request->isPost()) {
-			$this->forward404();
+			$msg="fobidden";
+			echo $msg;
+			exit();
 		}
 		$siteId = $this->request->getPost('site_id');
 		if (!isset($siteId)) {
-			return $this->redirect('/');
+			$msg="error";
+			echo $msg;
+			exit();
 		}
-		$categoryName = $this->request->getPost('test');
+		$categoryName = $this->request->getPost('category_name');
 		if (!isset($categoryName)) {
-			return $this->redirect('/');
+			$msg="error";
+			echo $msg;
+			exit();
 		}
 		$result=$this->db_manager->Category->changeCategory($userId,$siteId,$categoryName);
 		if (!$result) {
-			return $this->redirect('/account');
+			$msg="error";
+			echo $msg;
+			exit();
 		}
-		return $this->redirect('/rss');
+		$msg="success";
+			echo $msg;
+			exit();
+	}
+
+	//カテゴリ名を変更
+	public function changeCategoryNameAction()
+	{
+		if (!$this->request->isPost()) {
+			$msg="fobidden";
+			echo $msg;
+			exit();
+		}
+		$newCategoryName=$this->request->getPost('new_category_name');
+		$categoryName=$this->request->getPost('category_name');
+
+		$user = $this->session->get('user');
+		$userId = $user['id'];
+		if (!isset($categoryName)) {
+			$msg="error";
+			echo $msg;
+			exit();
+		}elseif (!isset($newCategoryName)) {
+			$msg="error";
+			echo $msg;
+			exit();
+		}
+
+		$result = $this->db_manager->Category->changeCategoryName($userId,$categoryName,$newCategoryName);
+		if (!$result) {
+			$msg="bubu";
+			echo $msg;
+			exit();
+		}
+		$msg="success";
+		echo $msg;
+		exit();
 	}
 }
 /*

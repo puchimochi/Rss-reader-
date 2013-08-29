@@ -69,4 +69,15 @@ class CategoryRepository extends DbRepository
 		return $stmt;
 	}
 
+	public function changeCategoryName($userId,$categoryName,$newName)
+	{
+		$sql="UPDATE category SET category_name = :new_category_name WHERE user_id = :user_id AND category_name = :category_name ";
+		$stmt=$this->execute($sql,array(
+			':user_id'=>$userId,
+			':new_category_name'=>$newName,
+			':category_name'=>$categoryName
+			));
+		return $stmt;
+	}
+
 }

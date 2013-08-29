@@ -91,20 +91,73 @@ $(function () {
 		});
 	});
 
+//カテゴリ名を変更
+	$(document).on('dblclick', '#category',function(){
+		if (!$(this).hasClass('on')) {
+			$(this).addClass('on');
+			var text = $(this).text();
+			alert(text);
+			$(this).html('<input type="text" name="category_name" placeholder="'+text+'">');
+			$('#category > input').focus().blur(function () {
+				var inputVal = $(this).val();
+				if (inputVal === '') {
+					$(this).parent().html('<li id="category" data-id="'+text+'"><a><strong><i class="icon-list"></i>'+text+'</strong></a></li>');
+				}
+				$(this).parent().removeClass('on');
+				$.ajax({
+					url :"/rss/changecategoryname",
+					type :'POST',
+					data :{new_category_name :inputVal,category_name:text},
+					success: function(msg){
+						alert(msg);
+						if (msg == 'error') {
+							alert('false!');
+						} else if(msg== 'fobidden'){
+							alert('post');
+						}else if(msg === 'bubu'){
+							alert('database');
+						}else{
+							location.href="/rss";
+						}
+					},
+					error: function(xhr, textStatus, errorThrown){
+						console.log(arguments);
+						//alert('Error! ' + textStatus + ' ' + errorThrown);
+						//location.href="/rss";
+					}
+				});
+			});
+		}
+	});
+
+
 //カテゴリを変更
 	$('.categories').click(function () {
-		var $category_name = $(this).parent('li').data('id');
-		var $site_id = $(this).parents('.lists').data('id');
+		var category_name = $(this).parent('li').data('id');
+		var site_id = $(this).parents('.lists').data('id');
 		alert(category_name);
 		alert(site_id);
-		$.ajax(
+		$.ajax({
 			url :"/rss/categorize",
-			type : 'POST',
-			data :{category_name :$category_name,site_id:$site_id},
-			settings,
-			settings,)
-
-	})
+			type :'POST',
+			data :{category_name :category_name,site_id:site_id},
+			success: function(msg){
+				alert(msg);
+					if (msg == 'error') {
+						alert('false!');
+					} else if(msg== 'fobidden'){
+						alert('post');
+					}else{
+						location.href="/rss";
+					}
+				},
+			error: function(xhr, textStatus, errorThrown){
+				console.log(arguments);
+				//alert('Error! ' + textStatus + ' ' + errorThrown);
+				//location.href="/rss";
+			}
+		});
+	});
 
 
 /*

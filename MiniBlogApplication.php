@@ -45,6 +45,8 @@ class MiniBlogApplication extends Application{
 				=>array('controller' => 'rss' ,'action' => 'show'),
 			'/rss/categorize'
 				=>array('controller' => 'rss' ,'action' => 'changeCategory'),
+			'/rss/changecategoryname'
+				=>array('controller' => 'rss' ,'action' => 'changeCategoryName'),
 
 			);
 	}
