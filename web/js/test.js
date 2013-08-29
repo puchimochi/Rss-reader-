@@ -91,14 +91,22 @@ $(function () {
 		});
 	});
 
-//
+//カテゴリを変更
+	$('.categories').click(function () {
+		var $category_name = $(this).parent('li').data('id');
+		var $site_id = $(this).parents('.lists').data('id');
+		alert(category_name);
+		alert(site_id);
+		$.ajax(
+			url :"/rss/categorize",
+			type : 'POST',
+			data :{category_name :$category_name,site_id:$site_id},
+			settings,
+			settings,)
 
-	$("#menu li").hover(function() {
+	})
 
-		$(this).children('ul').show();
-	}, function() {
-		$(this).children('ul').hide();
-	});
+
 /*
 	//JqueryUIで並び替え、データーベースに順番を保存
 	$('#lists').sortable({
