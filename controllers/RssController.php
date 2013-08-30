@@ -436,6 +436,34 @@ class RssController extends Controller
 		echo $msg;
 		exit();
 	}
+
+	public function deleteRssCategoryAction()
+	{
+		if (!$this->request->isPost()) {
+			$msg="fobidden";
+			echo $msg;
+			exit();
+		}
+		$categoryName = $this->request->getPost('category_name');
+
+		if (!isset($categoryName)) {
+			$msg="error";
+			echo $msg;
+			exit();
+		}
+		$user = $this->session->get('user');
+		$userId = $user['id'];
+		$result=$this->db_manager->Category->deleteCategory($userId,$categoryName);
+		if (!$result) {
+			$msg="database";
+			echo $msg;
+			exit();
+		}
+
+		$msg="success";
+		echo $msg;
+		exit();
+	}
 }
 /*
 	//URLごとにデーターを取り出す

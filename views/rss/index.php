@@ -14,11 +14,10 @@
 			<input type="button" id="addbtn" value="GO">
 			</div>
 		</form>
-
-		</div>
-		<div id="modal">
-				<button type="button" data-toggle="modal" data-target="#myModal">執行對話視窗</button>
-			</div>
+	</div>
+	<div id="modal">
+		<button type="button" data-toggle="modal" data-target="#myModal">執行對話視窗</button>
+	</div>
 </div>
 
 <hr>
@@ -26,17 +25,6 @@
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="span3">
-				<!-- <div>
-					<?php foreach($categories as $category => $sites):?>
-						<?php $options .="<option value='".$category."'>". $category."</option>";?>
-					<?php endforeach;?>
-				</div>
-				<div>
-					<?php foreach($categories as $category => $sites):?>
-						<?php $option .="<li>".$category."</li>";?>
-					<?php endforeach;?>
-				</div> -->
-
 				<div class="well sidebar-nav">
 					<ul class="nav nav-list"　>
 						<li class="nav-header">
@@ -119,14 +107,14 @@
 				</div>
 			<hr>
 		</div>
-			<div class="span9" id="content">
-				<?php if(count($entries) === 0):?>
-				<h3>Rssを追加してください。</h3>
-				<?php else:?>
-					<?php foreach($entries as $entry):?>
-					<?php echo $this->render('rss/rss',array('entry' => $entry));?>
-					<?php endforeach;?>
-				<?php endif;?></div>
+		<div class="span9" id="content">
+			<?php if(count($entries) === 0):?>
+			<h3>Rssを追加してください。</h3>
+			<?php else:?>
+				<?php foreach($entries as $entry):?>
+				<?php echo $this->render('rss/rss',array('entry' => $entry));?>
+				<?php endforeach;?>
+			<?php endif;?></div>
 		</div>
 	</div>
 	</div>

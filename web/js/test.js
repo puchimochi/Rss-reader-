@@ -6,20 +6,28 @@ $(function () {
 			return true;
 	}
 
-function isUrl(url) {
-	var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-	'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-	'((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-	'(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-	'(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-	'(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+	function isUrl(url) {
+		var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+		'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+		'((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+		'(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+		'(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+		'(\\#[-a-z\\d_]*)?$','i'); // fragment locator
 
-	if(!pattern.test(url)) {
-	return false;
-	} else {
-	return true;
+		if(!pattern.test(url)) {
+		return false;
+		} else {
+		return true;
+		}
 	}
-	}
+
+	$('input[type!="submit"][type!="button"]').keypress(function(e){
+		if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+		 return false;
+		}else{
+		 return true;
+		}
+	});
 
 //RSS追加
 	$('#addbtn').click(function  () {
@@ -107,9 +115,8 @@ function isUrl(url) {
 		});
 	});
 //カテゴリ別に記事を表示
-	$(document).on('click','#category',function(){
+	$(document).on('click.test','#category',function (){
 		var category_name = $(this).data('id');
-
 		$.ajax({
 			type:"POST",
 			url:"/rss/show",
@@ -141,11 +148,11 @@ function isUrl(url) {
 	});
 
 //カテゴリ名を変更
-	$(document).on('dblclick', '#category',function(){
+	$(document).on('dblclick.test', '#category',function (){
 		if (!$(this).hasClass('on')) {
 			$(this).addClass('on');
 			var text = $(this).text();
-			alert(text);
+			//alert(text);
 			$(this).html('<input type="text" name="category_name" placeholder="'+text+'">');
 			$('#category > input').focus().blur(function () {
 				var inputVal = $(this).val();
@@ -181,6 +188,46 @@ function isUrl(url) {
 	});
 
 
+//カテゴリ削除
+	$(document).on('mouseenter','#category',function(){
+		$(this).find('a').append('<i class="icon-star"></i>');
+		$('.icon-star').click(function () {
+			$('document').off(".test");
+			$(document).off(".test");
+			alert('Would U really want to DELETE this tag?');
+			if (confirm('Would U really want to DELETE this tag?')) {
+				var category_name = $(this).parents('li').data('id');
+				alert(category_name);
+				$.ajax({
+					url :"/rss/deletecategory",
+					type :'POST',
+					data :{category_name:category_name},
+					success: function(msg){
+						alert(msg);
+						if (msg == 'error') {
+							alert('false!');
+						} else if(msg== 'fobidden'){
+							alert('post');
+						}else if(msg === 'database'){
+							alert('database');
+						}else{
+							location.href="/rss";
+						}
+					},
+					error: function(xhr, textStatus, errorThrown){
+						console.log(arguments);
+						//alert('Error! ' + textStatus + ' ' + errorThrown);
+						//location.href="/rss";
+					}
+				});
+			}
+		});
+
+		$(this).mouseleave(function () {
+			$('.icon-star').remove();
+		});
+	});
+
 //カテゴリを変更
 	$('.categories').click(function () {
 		var category_name = $(this).parent('li').data('id');
@@ -208,7 +255,6 @@ function isUrl(url) {
 			}
 		});
 	});
-
 
 /*
 	//JqueryUIで並び替え、データーベースに順番を保存

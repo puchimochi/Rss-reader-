@@ -47,6 +47,8 @@ class MiniBlogApplication extends Application{
 				=>array('controller' => 'rss' ,'action' => 'changeCategory'),
 			'/rss/changecategoryname'
 				=>array('controller' => 'rss' ,'action' => 'changeCategoryName'),
+			'/rss/deletecategory'
+				=>array('controller' => 'rss' ,'action' => 'deleteRssCategory'),
 
 			);
 	}

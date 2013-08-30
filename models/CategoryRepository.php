@@ -80,4 +80,20 @@ class CategoryRepository extends DbRepository
 		return $stmt;
 	}
 
+	public function deleteCategory($userId,$categoryName)
+	{
+		$status = 'uncategorized';
+		$sql="UPDATE category SET category_name = :status WHERE user_id = :user_id AND site_id IS NOT NULL";
+		$stmt=$this->execute($sql, array(
+			':status'=>$status,
+			':user_id'=>$userId,
+			));
+		$sql ="DELETE FROM category WHERE user_id = :user_id AND category_name = :category_name";
+		$stmt=$this->execute($sql, array(
+			':user_id'=>$userId,
+			':category_name'=>$categoryName
+			));
+		return $stmt;
+	}
+
 }
