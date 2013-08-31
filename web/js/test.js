@@ -260,6 +260,51 @@ $(function () {
 		});
 	});
 
+	$('#add').click(function () {
+		var data = $('.testbtn').serializeArray();
+		var url=data[0].value;
+		if ( !validate(url)){
+				$('#addrss').prepend('<li>Please enter URL</li>');
+				// alert("Please enter URL");
+
+			}else{
+				var data = {_token:$('#token').val(),url:url};
+				$.ajax({
+					type :"POST",
+					url : '/rss/add',
+					data:data,
+					success : function(msg){
+						if (msg ==="forbidden") {
+							// location.href="/rss";
+							// alert(msg);
+							console.log(msg);
+							location.href="/rss";
+						}else if(msg ==="error"){
+							console.log(msg);
+							location.href="/rss";
+						}else{
+							alert("success");
+							location.href="/rss";
+						}
+					},
+					error: function(XMLHttpRequest, textStatus, errorThrown){
+						//通常はここでtextStatusやerrorThrownの値を見て処理を切り分けるか、単純に通信に失敗した際の処理を記述します。
+						//this;
+						//thisは他のコールバック関数同様にAJAX通信時のオプションを示します。
+						//エラーメッセージの表示
+						alert('Error : ' + errorThrown);
+					}
+				});
+			}
+
+
+		/*$.each(data, function (i,item) {
+			// body...
+			// alert(item.name);
+			var url=item.value;
+		});*/
+
+	})
 /*
 	//JqueryUIで並び替え、データーベースに順番を保存
 	$('#lists').sortable({

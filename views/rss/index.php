@@ -16,7 +16,7 @@
 		</form>
 	</div>
 	<div id="modal">
-		<button type="button" data-toggle="modal" data-target="#myModal">執行對話視窗</button>
+		<button type="button" data-toggle="modal" data-target="#myModal4">執行對話視窗</button>
 	</div>
 </div>
 
@@ -120,7 +120,25 @@
 	</div>
 </div>
 
-
+<!-- Modal 4-->
+				<div id="myModal4" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						<h3 id="myModalLabel">カテゴリ追加</h3>
+					</div>
+					<div class="modal-body">
+						<div id="addcategory">
+							<form class="testbtn" >
+								<input class="span4"  type = "text" name="category" size="100" >
+								<p><input type="button" id="add" value="追加"></p>
+						</form>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn" data-dismiss="modal" aria-hidden="true">close</button>
+						<button class="btn btn-primary">save</button>
+					</div>
+				</div><!-- Moda4 -->
 
 				<!-- Modal
 				<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -144,7 +162,7 @@
 						<button class="btn" data-dismiss="modal" aria-hidden="true">close</button>
 						<button class="btn btn-primary">save</button>
 					</div>
-				</div>-- Modal -->
+				</div> Modal -->
 
 				<!-- Modal 2-->
 				<div id="myModal2" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
