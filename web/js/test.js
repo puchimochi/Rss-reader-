@@ -190,36 +190,40 @@ $(function () {
 
 //カテゴリ削除
 	$(document).on('mouseenter','#category',function(){
+		var category_name = $(this).data('id');
+				// alert(category_name);
 		$(this).find('a').append('<i class="icon-star"></i>');
+
 		$('.icon-star').click(function () {
-			$('document').off(".test");
-			$(document).off(".test");
+			// $('document').off(".test");
+			// $(document).off(".test");
 			alert('Would U really want to DELETE this tag?');
 			if (confirm('Would U really want to DELETE this tag?')) {
-				var category_name = $(this).parents('li').data('id');
-				alert(category_name);
-				$.ajax({
-					url :"/rss/deletecategory",
-					type :'POST',
-					data :{category_name:category_name},
-					success: function(msg){
-						alert(msg);
-						if (msg == 'error') {
-							alert('false!');
-						} else if(msg== 'fobidden'){
-							alert('post');
-						}else if(msg === 'database'){
-							alert('database');
-						}else{
-							location.href="/rss";
+				// alert(category_name);
+				if (typeof category_name != "undefined") {
+					$.ajax({
+						url :"/rss/deletecategory",
+						type :'POST',
+						data :{category_name:category_name},
+						success: function(msg){
+							alert(msg);
+							if (msg == 'error') {
+								alert('false!');
+							} else if(msg== 'fobidden'){
+								alert('post');
+							}else if(msg === 'database'){
+								alert('database');
+							}else{
+								location.href="/rss";
+							}
+						},
+						error: function(xhr, textStatus, errorThrown){
+							console.log(arguments);
+							//alert('Error! ' + textStatus + ' ' + errorThrown);
+							//location.href="/rss";
 						}
-					},
-					error: function(xhr, textStatus, errorThrown){
-						console.log(arguments);
-						//alert('Error! ' + textStatus + ' ' + errorThrown);
-						//location.href="/rss";
-					}
-				});
+					});
+				}
 			}
 		});
 
