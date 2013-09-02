@@ -7,13 +7,7 @@ $(function () {
 	}
 
 	function isUrl(url) {
-		var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-		'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-		'((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-		'(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-		'(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-		'(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-
+		var pattern = new RegExp('^(((http|https|ftp):\/\/)?([[a-zA-Z0-9]\-\.])+(\.)([[a-zA-Z0-9]]){2,4}([[a-zA-Z0-9]\/+=%&amp;_\.~?\-]*))*$','i'); // fragment locator
 		if(!pattern.test(url)) {
 		return false;
 		} else {
@@ -28,9 +22,44 @@ $(function () {
 		 return true;
 		}
 	});
+//RSS追加(モーダル)
+	$('#add').click(function () {
+		var data = $('.addRss').serializeArray();
+		var url=data[0].value;
+		// alert(url);
+		if ( !validate(url)){
+			alert("Please enter URL");
+		}else if(!isUrl(url)){
+			alert("Please enter URL");
+		}else{
+			var data = {_token:$('#token').val(),url:url};
+			$.ajax({
+				type :"POST",
+				url : '/rss/add',
+				data:data,
+				success : function(msg){
+					if (msg ==="forbidden") {
+						location.href="/rss";
+						alert(msg);
+						console.log(msg);
+						location.href="/rss";
+					}else if(msg ==="error!"){
+						console.log(msg);
+						location.href="/rss";
+					}else{
+						alert("success");
+						location.href="/rss";
+					}
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown){
+					alert('Error : ' + errorThrown);
+				}
+			});
+		}
+	});
 
 //RSS追加
-	$('#addbtn').click(function  () {
+	/*$('#addbtn').click(function  () {
 			var url = $('#url').val();
 			if ( !validate(url)){
 				$('#addrss').prepend('<li>Please enter URL</li>');
@@ -67,14 +96,13 @@ $(function () {
 					}
 				});
 			}
-		});
+		});*/
 
-
-	//RSSフィードを削除
+//RSSフィードを削除
 	$(document).on('click','.delete',function(){
 		if (confirm('Would U really want to delete it?')){
 			var site_id = $(this).parent().parent().parent().data('id');
-			alert(site_id);
+			// alert(site_id);
 			$.post('/rss/delete',{site_id:site_id},function(rs){
 				console.log(rs);
 				$('#siteId_'+site_id).fadeOut(100);
@@ -82,7 +110,8 @@ $(function () {
 			});
 		}
 	});
-	//個別に記事を表示
+
+//個別に記事を表示
 	$(document).on('click','.lists',function(){
 		var site_id = $(this).data('id');
 		//alert(site_id);
@@ -100,7 +129,7 @@ $(function () {
 				$('#content').html('<div></div>');
 				var count = 1;
 				$.each(data, function(i,value){
-					$('#content').append('<table class="table table-bordered"><tr><th>title:<a href="'+data[i].link+'" target="_blank">'+data[i].title+'</a></th></tr><tr><th>投稿日時：'+data[i].created_at +'<form action= "http://localhost:1212/rss/change" method = "post"><input type="hidden" name="entry_id" value="'+data[i].id +'" id="readflag"><input type="submit" id="addbtn" value="既読"></form><br>'+data[i].content+'<br>'+'<a href="'+data[i].link+'" target="_blank">続きは...</a></th></tr></table>');
+					$('#content').append('<table class="table table-bordered"><tr><th> title:<a href="'+data[i].link+'" target="_blank">'+data[i].title+'</a><p class="pull-right">投稿日時：'+data[i].created_at+'</p></th></tr><tr><th>'+data[i].content+'<br>'+'<a href="'+data[i].link+'" target="_blank">続きは...</a><form action= "http://localhost:1212/rss/change" method = "post"><input type="hidden" name="entry_id" value="'+data[i].id +'" id="readflag"><input class="btn pull-right" type="submit" value="既読"></form></th></tr></table>');
 					count ++;
 				});
 
@@ -133,7 +162,7 @@ $(function () {
 				$('#content').html('<div><div>');
 				var count = 1;
 				$.each(data, function(i,value){
-					$('#content').append('<table class="table table-bordered"><tr><th>title:<a href="'+data[i].link+'" target="_blank">'+data[i].title+'</a></th></tr><tr><th>投稿日時：'+data[i].created_at +'<form action= "http://localhost:1212/rss/change" method = "post"><input type="hidden" name="entry_id" value="'+data[i].id +'" id="readflag"><input type="submit" id="addbtn" value="既読"></form><br>'+data[i].content+'<br>'+'<a href="'+data[i].link+'" target="_blank">続きは...</a></th></tr></table>');
+					$('#content').append('<table class="table table-bordered"><tr><th> title:<a href="'+data[i].link+'" target="_blank">'+data[i].title+'</a><p class="pull-right">投稿日時：'+data[i].created_at+'</p></th></tr><tr><th>'+data[i].content+'<br>'+'<a href="'+data[i].link+'" target="_blank">続きは...</a><form action= "http://localhost:1212/rss/change" method = "post"><input type="hidden" name="entry_id" value="'+data[i].id +'" id="readflag"><input class="btn pull-right" type="submit" value="既読"></form></th></tr></table>');
 					count ++;
 				});
 
@@ -147,8 +176,43 @@ $(function () {
 		});
 	});
 
+//カテゴリ追加
+	$('#addbtn').click(function () {
+		var data = $('.addCategory').serializeArray();
+		var category=data[0].value;
+		alert(category);
+		if ( !validate(category)){
+			alert("Please enter a category name");
+		}else if(category !== ''){
+			var data = {category:category};
+			$.ajax({
+				type :"POST",
+				url : '/rss/addCategory',
+				data:data,
+				success : function(msg){
+					if (msg ==="forbidden") {
+						location.href="/rss";
+						alert(msg);
+						console.log(msg);
+						location.href="/rss";
+					}else if(msg ==="error!"){
+						console.log(msg);
+						location.href="/rss";
+					}else{
+						alert("success");
+						location.href="/rss";
+					}
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown){
+					alert('Error : ' + errorThrown);
+				}
+			});
+		}
+	});
+
 //カテゴリ名を変更
-	$(document).on('dblclick.test', '#category',function (){
+	$(document).on('dblclick', '#category',function (){
+		$(document).off(".test");
 		if (!$(this).hasClass('on')) {
 			$(this).addClass('on');
 			var text = $(this).text();
@@ -187,17 +251,15 @@ $(function () {
 		}
 	});
 
-
 //カテゴリ削除
 	$(document).on('mouseenter','#category',function(){
 		var category_name = $(this).data('id');
 				// alert(category_name);
-		$(this).find('a').append('<i class="icon-star"></i>');
+		$(this).find('#deleteCategory').append('<i class="icon-trash"></i>');
 
-		$('.icon-star').click(function () {
-			// $('document').off(".test");
+		$('.icon-trash').click(function () {
 			// $(document).off(".test");
-			alert('Would U really want to DELETE this tag?');
+			// alert('Would U really want to DELETE this tag?');
 			if (confirm('Would U really want to DELETE this tag?')) {
 				// alert(category_name);
 				if (typeof category_name != "undefined") {
@@ -224,11 +286,14 @@ $(function () {
 						}
 					});
 				}
+			}else{
+				$(document).on(".test");
 			}
 		});
 
 		$(this).mouseleave(function () {
-			$('.icon-star').remove();
+			$('.icon-trash').remove();
+			$(document).on(".test");
 		});
 	});
 
@@ -236,14 +301,14 @@ $(function () {
 	$('.categories').click(function () {
 		var category_name = $(this).parent('li').data('id');
 		var site_id = $(this).parents('.lists').data('id');
-		alert(category_name);
-		alert(site_id);
+		// alert(category_name);
+		// alert(site_id);
 		$.ajax({
 			url :"/rss/categorize",
 			type :'POST',
 			data :{category_name :category_name,site_id:site_id},
 			success: function(msg){
-				alert(msg);
+				// alert(msg);
 					if (msg == 'error') {
 						alert('false!');
 					} else if(msg== 'fobidden'){
@@ -260,51 +325,6 @@ $(function () {
 		});
 	});
 
-	$('#add').click(function () {
-		var data = $('.testbtn').serializeArray();
-		var url=data[0].value;
-		if ( !validate(url)){
-				$('#addrss').prepend('<li>Please enter URL</li>');
-				// alert("Please enter URL");
-
-			}else{
-				var data = {_token:$('#token').val(),url:url};
-				$.ajax({
-					type :"POST",
-					url : '/rss/add',
-					data:data,
-					success : function(msg){
-						if (msg ==="forbidden") {
-							// location.href="/rss";
-							// alert(msg);
-							console.log(msg);
-							location.href="/rss";
-						}else if(msg ==="error"){
-							console.log(msg);
-							location.href="/rss";
-						}else{
-							alert("success");
-							location.href="/rss";
-						}
-					},
-					error: function(XMLHttpRequest, textStatus, errorThrown){
-						//通常はここでtextStatusやerrorThrownの値を見て処理を切り分けるか、単純に通信に失敗した際の処理を記述します。
-						//this;
-						//thisは他のコールバック関数同様にAJAX通信時のオプションを示します。
-						//エラーメッセージの表示
-						alert('Error : ' + errorThrown);
-					}
-				});
-			}
-
-
-		/*$.each(data, function (i,item) {
-			// body...
-			// alert(item.name);
-			var url=item.value;
-		});*/
-
-	})
 /*
 	//JqueryUIで並び替え、データーベースに順番を保存
 	$('#lists').sortable({

@@ -84,22 +84,7 @@ class RssController extends Controller
 			$msg="success";
 			echo $msg;
 			exit();
-		// return $this->redirect('/rss');
 		}
-
-/*		$user = $this->session->get('user');
-		$blog = $this->showAllRss($user);
-		$entries = $blog['entries'];
-		$siteTitles = $blog['siteTitles'];
-		$categories = $this->getRssInfo();
-
-		return $this->render(array(
-			'errors'	=> $errors,
-			'_token'	=> $this->generateCsrfToken('rss/add'),
-			'entries'	=> $entries,
-			'siteTitles'	=>$siteTitles,
-			'categories'	=>$categories
-			),'index');*/
 	}
 
 	/*ユーザーのRSSフィードを表示
@@ -161,6 +146,7 @@ class RssController extends Controller
 
 		$msg = "success";
 		echo "success";
+		exit();
 	}
 
 	/*
@@ -273,18 +259,26 @@ class RssController extends Controller
 		$categoryName = $this->request->getPost('category');
 
 		if (!$this->request->isPost()) {
-			$this->forward404();
+			$msg="forbidden!";
+			echo $msg;
+			exit();
 		}
 
 		if (! strlen($categoryName)) {
-			return $this->redirect('/account');
+			$msg="error!";
+			echo $msg;
+			exit();
 		}
 
 		$result = $this->db_manager->Category->addCategory($userId,$categoryName);
 		if (!$result) {
-			$this->redirect('/');
+			$msg="error!";
+			echo $msg;
+			exit();
 		}
-		$this->redirect('/rss');
+		$msg = "success";
+		echo "success";
+		exit();
 	}
 
 //カテゴリ情報を取得
